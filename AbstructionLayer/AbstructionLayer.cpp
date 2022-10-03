@@ -4,6 +4,8 @@
 #include "framework.h"
 #include "AbstructionLayer.h"
 
+#include "CD3D11Graphics.h"
+
 #define MAX_LOADSTRING 100
 
 // グローバル変数:
@@ -43,15 +45,38 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
     // メイン メッセージ ループ:
-    while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-    }
+    //while (GetMessage(&msg, nullptr, 0, 0))
+    //{
+    //    if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+    //    {
+    //        TranslateMessage(&msg);
+    //        DispatchMessage(&msg);
+    //    }
+    //}
 
+    while (1)
+    {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            if (msg.message == WM_QUIT)
+            {
+                break;
+            }
+            else
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+        }
+
+        // ゲームループメイン処理
+        float color[4] = { 1,0,1,1 };
+        CD3D11Graphics::GetInstance().getDevContextPtr()->ClearRenderTargetView(CD3D11Graphics::GetInstance().getBackBufferVierPtr(), color);
+
+        // バックバッファの内容を表示
+        CD3D11Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);
+    }
+    CD3D11Graphics::DeleteInstance();
     return (int) msg.wParam;
 }
 
@@ -103,6 +128,12 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    if (!hWnd)
    {
       return FALSE;
+   }
+
+   CD3D11Graphics::CreateInstance();
+   if (CD3D11Graphics::GetInstance().InitD3D11(hWnd, 1280, 720) == -1)
+   {
+       return -1;
    }
 
    ShowWindow(hWnd, nCmdShow);
