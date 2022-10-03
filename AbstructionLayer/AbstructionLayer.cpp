@@ -44,20 +44,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
-    // メイン メッセージ ループ:
-    //while (GetMessage(&msg, nullptr, 0, 0))
-    //{
-    //    if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-    //    {
-    //        TranslateMessage(&msg);
-    //        DispatchMessage(&msg);
-    //    }
-    //}
-
+    // メインループ
     while (1)
     {
+        // ウィンドウメッセージの取得
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
+            // 終了メッセージを受け取った場合、ループを抜ける
             if (msg.message == WM_QUIT)
             {
                 break;
@@ -69,11 +62,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             }
         }
 
-        // ゲームループメイン処理
+        // メイン処理
         float color[4] = { 1,0,1,1 };
         CD3D11Graphics::GetInstance().getDevContextPtr()->ClearRenderTargetView(CD3D11Graphics::GetInstance().getBackBufferVierPtr(), color);
 
-        // バックバッファの内容を表示
+        // バックバッファを表示
         CD3D11Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);
     }
     CD3D11Graphics::DeleteInstance();
