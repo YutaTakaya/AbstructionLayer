@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="AbstructionLayer.h" />
     <ClInclude Include="D3D11Graphics.h" />
+    <ClInclude Include="ObjData.h" />
     <ClInclude Include="D3D11System.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -150,6 +151,7 @@
   <ItemGroup>
     <ClCompile Include="AbstructionLayer.cpp" />
     <ClCompile Include="D3D11Graphics.cpp" />
+    <ClCompile Include="ObjData.cpp" />
     <ClCompile Include="D3D11System.cpp" />
   </ItemGroup>
   <ItemGroup>

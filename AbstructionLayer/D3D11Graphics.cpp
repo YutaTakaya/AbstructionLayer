@@ -10,19 +10,7 @@
 #include <vector>
 
 
-//---------------------------------------------
-/// DirectX11の初期化関数
-///
-/// \param[in] ( hWnd )         ウィンドウハンドル
-/// \param[in] ( width )        ウィンドウの幅
-/// \param[in] ( height )       ウィンドウの高さ
-/// \param[out] ( m_device )    デバイス
-/// \param[out] ( m_deviceContext )     デバイスコンテキスト
-/// \param[out] ( m_backBufferView )    バックバッファ―ビュー
-/// \param[out] ( m_swapChain )         スワップチェイン
-///
-/// \return エラーの場合-1、正常に終了した場合0が返される
-//--------------------------------------------- 
+
 int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
 {
     HRESULT sts;
@@ -173,4 +161,20 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
         return -1;
     }
     return 0;
+}
+
+void D3D11Graphics::CreateInstance()
+{
+    DeleteInstance();
+
+    s_instance = new D3D11Graphics();
+}
+
+void D3D11Graphics::DeleteInstance()
+{
+    if (s_instance != nullptr)
+    {
+        delete s_instance;
+        s_instance = nullptr;
+    }
 }

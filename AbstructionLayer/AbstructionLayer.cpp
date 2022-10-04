@@ -45,6 +45,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
+    D3D11Init();
     // メインループ
     while (1)
     {
@@ -64,11 +65,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
         // メイン処理
-        D3D11Update();
+        D3D11Draw();
 
         // バックバッファを表示
         D3D11Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);
     }
+    D3D11Uninit();
     D3D11Graphics::DeleteInstance();
     return (int) msg.wParam;
 }
@@ -128,7 +130,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
        return -1;
    }
-
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
