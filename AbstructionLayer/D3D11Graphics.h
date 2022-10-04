@@ -1,9 +1,9 @@
-#pragma once
 //==============================================================================
 // Filename: D3D11Graphics.h
 // Description: DirectX11‚Ì•`‰æƒVƒXƒeƒ€
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
+#pragma once
 
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"dxgi.lib")

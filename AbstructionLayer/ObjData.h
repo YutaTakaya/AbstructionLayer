@@ -1,9 +1,9 @@
-#pragma once
 //==============================================================================
 // Filename: ObjData.h
 // Description: ポリゴン情報及び描画システム
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
+#pragma once
 
 #include "D3D11Graphics.h"
 #include <vector>

@@ -1,7 +1,12 @@
+//==============================================================================
+// Filename: ObjData.cpp
+// Description: ƒ|ƒŠƒSƒ“î•ñ‹y‚Ñ•`‰æƒVƒXƒeƒ€
+// Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
+//==============================================================================
+
 #include "ObjData.h"
 
-
-int ObjData::ObjInit(VertexData* p_VData, int vNum)
+int ObjData::ObjInit(const VertexData* p_VData,const int vNum)
 {
     HRESULT sts;
 
