@@ -1,5 +1,14 @@
-#include "CD3D11Graphics.h"
+//==============================================================================
+// Filename: D3D11Graphics.cpp
+// Description: DirectX11の描画システム
+// Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
+//==============================================================================
+
+#include "D3D11Graphics.h"
 #include <windows.h>
+#include <string>
+#include <vector>
+
 
 //---------------------------------------------
 /// DirectX11の初期化関数
@@ -14,7 +23,7 @@
 ///
 /// \return エラーの場合-1、正常に終了した場合0が返される
 //--------------------------------------------- 
-int CD3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
+int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
 {
     HRESULT sts;
 
@@ -43,7 +52,7 @@ int CD3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
         nullptr,
         D3D_DRIVER_TYPE_HARDWARE,
         nullptr,
-        D3D11_CREATE_DEVICE_DEBUG,  // D3D11_CREATE_DEVICE_DEBUGにするとD3Dのデバッグを有効にできるが重くなる
+        0,  // D3D11_CREATE_DEVICE_DEBUGにするとD3Dのデバッグを有効にできるが重くなる
         featureLevels,
         _countof(featureLevels),
         D3D11_SDK_VERSION,
@@ -55,6 +64,10 @@ int CD3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
     {
         return -1;
     }
+
+    //---------------------------------------------------------------------------
+    // スワップチェイン設定
+    //---------------------------------------------------------------------------
 
     // スワップチェインのデスクリプタヒープの作成
     DXGI_SWAP_CHAIN_DESC scDesc = {};
@@ -106,5 +119,58 @@ int CD3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
     D3D11_VIEWPORT vp = { 0.0f,0.0f,(float)width,(float)height,0.0f,1.0f };
     m_deviceContext->RSSetViewports(1, &vp);
 
+    //---------------------------------------------------------------------------
+    // シェーダー設定
+    //---------------------------------------------------------------------------
+    ComPtr<ID3DBlob> errorBlob = nullptr;
+    // 頂点シェーダー
+    ComPtr<ID3DBlob> compiledVS = nullptr;
+    sts = D3DCompileFromFile(L"D3D11VertexShader.hlsl", nullptr, nullptr, "VSmain", "vs_5_0", 0, 0, &compiledVS, &errorBlob);
+    if (FAILED(sts))
+    {
+        // エラー表示
+        std::string errorStr;
+        errorStr.resize(errorBlob->GetBufferSize());
+        std::copy_n((char*)errorBlob->GetBufferPointer(),
+            errorBlob->GetBufferSize(),
+            errorStr.begin());
+        return -1;
+    }
+    sts = m_device->CreateVertexShader(compiledVS->GetBufferPointer(), compiledVS->GetBufferSize(), nullptr, &m_spriteVS);
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+
+    // ピクセルシェーダー
+    ComPtr<ID3DBlob> compiledPS = nullptr;
+    sts = D3DCompileFromFile(L"D3D11VertexShader.hlsl", nullptr, nullptr, "PSmain", "ps_5_0", 0, 0, &compiledPS, &errorBlob);
+    if (FAILED(sts))
+    {
+        // エラー表示
+        std::string errorStr;
+        errorStr.resize(errorBlob->GetBufferSize());
+        std::copy_n((char*)errorBlob->GetBufferPointer(),
+            errorBlob->GetBufferSize(),
+            errorStr.begin());
+        return -1;
+    }
+    sts = m_device->CreatePixelShader(compiledPS->GetBufferPointer(), compiledPS->GetBufferSize(), nullptr, &m_spritePS);
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+
+    // セマンティクスの設定
+    std::vector<D3D11_INPUT_ELEMENT_DESC> layout = {
+        {"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
+    };
+    
+    // 頂点インプットレイアウト作成
+    sts = m_device->CreateInputLayout(&layout[0], layout.size(), compiledVS->GetBufferPointer(), compiledVS->GetBufferSize(), &m_spriteInputLayout);
+    if (FAILED(sts))
+    {
+        return -1;
+    }
     return 0;
 }

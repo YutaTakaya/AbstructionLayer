@@ -4,7 +4,8 @@
 #include "framework.h"
 #include "AbstructionLayer.h"
 
-#include "CD3D11Graphics.h"
+#include "D3D11Graphics.h"
+#include "D3D11System.h"
 
 #define MAX_LOADSTRING 100
 
@@ -63,13 +64,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
         // メイン処理
-        float color[4] = { 1,0,1,1 };
-        CD3D11Graphics::GetInstance().getDevContextPtr()->ClearRenderTargetView(CD3D11Graphics::GetInstance().getBackBufferVierPtr(), color);
+        D3D11Update();
 
         // バックバッファを表示
-        CD3D11Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);
+        D3D11Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);
     }
-    CD3D11Graphics::DeleteInstance();
+    D3D11Graphics::DeleteInstance();
     return (int) msg.wParam;
 }
 
@@ -123,8 +123,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       return FALSE;
    }
 
-   CD3D11Graphics::CreateInstance();
-   if (CD3D11Graphics::GetInstance().InitD3D11(hWnd, 1280, 720) == -1)
+   D3D11Graphics::CreateInstance();
+   if (D3D11Graphics::GetInstance().InitD3D11(hWnd, 1280, 720) == -1)
    {
        return -1;
    }
