@@ -54,6 +54,10 @@ int D3D11Camera::CameraInit(
 
 int D3D11Camera::CameraDraw()
 {
+    m_worldMtx = DirectX::XMMatrixMultiply(m_worldMtx, DirectX::XMMatrixRotationX(0.009f));
+    m_worldMtx = DirectX::XMMatrixMultiply(m_worldMtx, DirectX::XMMatrixRotationY(0.006f));
+    m_worldMtx = DirectX::XMMatrixMultiply(m_worldMtx, DirectX::XMMatrixRotationZ(0.003f));
+
     // 定数バッファへの入力
     ConstantBuffer cb;
     XMStoreFloat4x4(&cb.world, DirectX::XMMatrixTranspose(m_worldMtx));

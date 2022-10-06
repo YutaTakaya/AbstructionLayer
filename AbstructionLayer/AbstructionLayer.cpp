@@ -65,7 +65,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
         // メイン処理
-        D3D11Draw();
+        D3D11Render();
 
         // バックバッファを表示
         D3D11Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);

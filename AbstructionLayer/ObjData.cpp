@@ -77,6 +77,10 @@ int ObjData::ObjDraw()
         PSSetShader(D3D11Graphics::GetInstance().getPixelShaderPtr(), 0, 0);
     D3D11Graphics::GetInstance().getDevContextPtr()->
         IASetInputLayout(D3D11Graphics::GetInstance().getInputLayoutPtr());
+    //D3D11Graphics::GetInstance().getDevContextPtr()->OMSetRenderTargets(
+    //    1,
+    //    D3D11Graphics::GetInstance().getRenderTargetVierPtr(),
+    //    D3D11Graphics::GetInstance().getDepthStencilVierPtr());
 
     D3D11Graphics::GetInstance().getDevContextPtr()->
         DrawIndexed((int)m_index.size(), 0, 0);

@@ -12,6 +12,7 @@ struct VertexData
 {
     DirectX::XMFLOAT3 pos;
     DirectX::XMFLOAT2 uv;
+    DirectX::XMFLOAT4 col;
 };
 
 class ObjData

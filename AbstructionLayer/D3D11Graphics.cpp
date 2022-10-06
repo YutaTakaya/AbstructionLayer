@@ -9,8 +9,6 @@
 #include <string>
 #include <vector>
 
-
-
 int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
 {
     HRESULT sts;
@@ -153,6 +151,7 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
     std::vector<D3D11_INPUT_ELEMENT_DESC> layout = {
         {"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
         {"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
+        {"COLOR",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
     };
     
     // 頂点インプットレイアウト作成
@@ -161,6 +160,36 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
     {
         return -1;
     }
+
+    // 深度バッファの作成
+    D3D11_TEXTURE2D_DESC txDesc = {};
+    txDesc.Width = width;
+    txDesc.Height = height;
+    txDesc.MipLevels = 1;
+    txDesc.ArraySize = 1;
+    txDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    txDesc.SampleDesc.Count = 1;
+    txDesc.SampleDesc.Quality = 0;
+    txDesc.Usage = D3D11_USAGE_DEFAULT;
+    txDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    txDesc.CPUAccessFlags = 0;
+    txDesc.MiscFlags = 0;
+    sts = D3D11Graphics::GetInstance().getDevPtr()->CreateTexture2D(&txDesc, NULL, &m_depthStencilTexture);
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC dsDesc = {};
+    dsDesc.Format = txDesc.Format;
+    dsDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    dsDesc.Texture2D.MipSlice = 0;
+    sts = D3D11Graphics::GetInstance().getDevPtr()->CreateDepthStencilView(m_depthStencilTexture.Get(), &dsDesc, &m_depthStencilView);
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+
     return 0;
 }
 

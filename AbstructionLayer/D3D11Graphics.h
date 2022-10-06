@@ -13,6 +13,7 @@
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
 #include <wrl/client.h>
+
 using Microsoft::WRL::ComPtr;
 
 class D3D11Graphics
@@ -53,7 +54,6 @@ public:
 	{
 		return *s_instance;
 	}
-
 
 	//---------------------------------------------
 	/// デバイスのポインタを取得する
@@ -125,6 +125,26 @@ public:
 		return m_spriteInputLayout.Get();
 	}
 
+	//---------------------------------------------
+	/// レンダーターゲットビューのポインタを取得する
+	/// 
+	/// \return レンダーターゲットビューのポインタ
+	//--------------------------------------------- 
+	ID3D11RenderTargetView** getRenderTargetVierPtr()
+	{
+		return m_renderTargetView.GetAddressOf();
+	}
+
+	//---------------------------------------------
+	/// レンダーターゲットビューのポインタを取得する
+	/// 
+	/// \return レンダーターゲットビューのポインタ
+	//--------------------------------------------- 
+	ID3D11DepthStencilView* getDepthStencilVierPtr()
+	{
+		return m_depthStencilView.Get();
+	}
+
 	//---------------------------------------------------------------------------
 protected:
 
@@ -134,6 +154,9 @@ private:
     ComPtr<ID3D11DeviceContext> m_deviceContext;
     ComPtr<ID3D11RenderTargetView>  m_backBufferView;
     ComPtr<IDXGISwapChain>  m_swapChain;
+	ComPtr<ID3D11Texture2D> m_depthStencilTexture;
+	ComPtr<ID3D11RenderTargetView>	m_renderTargetView;
+	ComPtr<ID3D11DepthStencilView>	m_depthStencilView;
 
 	ComPtr<ID3D11VertexShader> m_spriteVS = nullptr;
 	ComPtr<ID3D11PixelShader> m_spritePS = nullptr;
@@ -146,6 +169,9 @@ private:
 	/// m_deviceContext			D3D11デバイスコンテキスト
 	/// m_backBufferView		D3D11バックバッファ―ビュー
 	/// m_swapChain				スワップチェイン
+	/// m_depthStencilTexture	深度ステンシルテクスチャ
+	/// m_renderTargetView		RTV
+	/// m_depthStencilView		深度ステンシルビュー
 	/// 
 	/// m_spriteVS				頂点シェーダー情報
 	/// m_spritePS				ピクセルシェーダー情報

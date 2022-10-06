@@ -9,9 +9,10 @@ struct VSOutput
 {
     float4 Pos : SV_POSITION; // 頂点座標（射影座標系）
     float2 Tex : TEXCOORD; // UV座標
+    float4 Col : COLOR; // 色
 };
 
-VSOutput VSmain(float4 pos : POSITION, float2 tex : TEXCOORD)
+VSOutput VSmain(float4 pos : POSITION, float2 tex : TEXCOORD, float4 col : COLOR)
 {
 	VSOutput Out;
     Out = (VSOutput) 0;
@@ -24,14 +25,15 @@ VSOutput VSmain(float4 pos : POSITION, float2 tex : TEXCOORD)
     };
     
     Out.Pos = mul(pos, World);
-    Out.Pos = mul(pos, View);
-    Out.Pos = mul(pos, Projection);
+    Out.Pos = mul(Out.Pos, View);
+    Out.Pos = mul(Out.Pos, Projection);
     
     Out.Tex = tex;
+    Out.Col = col;
 	return Out;
 }
 
-float4 PSmain(VSOutput In) : SV_TARGET
+float4 PSmain(VSOutput In) : SV_TARGET0
 {   
-    return float4(In.Tex, 1, 1);
+    return float4(In.Col);
 }

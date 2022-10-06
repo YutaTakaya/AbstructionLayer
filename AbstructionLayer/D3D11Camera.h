@@ -63,9 +63,9 @@ protected:
 private:
 	//---------------------------------------------------------------------------
     ComPtr<ID3D11Buffer> m_constBuffer;
-	DirectX::XMMATRIX m_worldMtx;
-	DirectX::XMMATRIX m_viewMtx;
-	DirectX::XMMATRIX m_projMtx;
+	DirectX::XMMATRIX m_worldMtx = {};
+	DirectX::XMMATRIX m_viewMtx = {};
+	DirectX::XMMATRIX m_projMtx = {};
 
 	static inline D3D11Camera* s_instance;
 
