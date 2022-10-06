@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AbstructionLayer.h" />
+    <ClInclude Include="D3D11Camera.h" />
     <ClInclude Include="D3D11Graphics.h" />
     <ClInclude Include="ObjData.h" />
     <ClInclude Include="D3D11System.h" />
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstructionLayer.cpp" />
+    <ClCompile Include="D3D11Camera.cpp" />
     <ClCompile Include="D3D11Graphics.cpp" />
     <ClCompile Include="ObjData.cpp" />
     <ClCompile Include="D3D11System.cpp" />
@@ -162,15 +164,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="D3D11PixelShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </AdditionalIncludeDirectories>
-    </FxCompile>
-    <FxCompile Include="D3D11VertexShader.hlsl">
+    <FxCompile Include="D3D11Shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

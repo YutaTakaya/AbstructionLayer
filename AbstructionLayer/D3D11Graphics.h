@@ -130,9 +130,6 @@ protected:
 
 private:
 	//---------------------------------------------------------------------------
-	HWND    m_hWnd;
-    HINSTANCE   m_hInst;
-
     ComPtr<ID3D11Device>    m_device;
     ComPtr<ID3D11DeviceContext> m_deviceContext;
     ComPtr<ID3D11RenderTargetView>  m_backBufferView;
@@ -145,19 +142,16 @@ private:
 	static inline D3D11Graphics* s_instance;
 	//---------------------------------------------------------------------------
 	/// <summary>
-	/// m_hWnd      ウィンドウハンドル
-	/// m_hInst		インスタンスハンドル
+	/// m_device				D3D11デバイス
+	/// m_deviceContext			D3D11デバイスコンテキスト
+	/// m_backBufferView		D3D11バックバッファ―ビュー
+	/// m_swapChain				スワップチェイン
 	/// 
-	/// m_device			D3D11デバイス
-	/// m_deviceContext		D3D11デバイスコンテキスト
-	/// m_backBufferView	D3D11バックバッファ―ビュー
-	/// m_swapChain			スワップチェイン
-	/// 
-	/// m_spriteVS	頂点シェーダー情報
-	/// m_spritePS	ピクセルシェーダー情報
+	/// m_spriteVS				頂点シェーダー情報
+	/// m_spritePS				ピクセルシェーダー情報
 	/// m_spriteInputLayout		入力レイアウト情報
 	/// 
-	/// s_instance	インスタンス
+	/// s_instance				インスタンス
 	/// </summary>
 
 

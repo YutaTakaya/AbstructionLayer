@@ -113,7 +113,7 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
     ComPtr<ID3DBlob> errorBlob = nullptr;
     // 頂点シェーダー
     ComPtr<ID3DBlob> compiledVS = nullptr;
-    sts = D3DCompileFromFile(L"D3D11VertexShader.hlsl", nullptr, nullptr, "VSmain", "vs_5_0", 0, 0, &compiledVS, &errorBlob);
+    sts = D3DCompileFromFile(L"D3D11Shader.hlsl", nullptr, nullptr, "VSmain", "vs_5_0", 0, 0, &compiledVS, &errorBlob);
     if (FAILED(sts))
     {
         // エラー表示
@@ -132,7 +132,7 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
 
     // ピクセルシェーダー
     ComPtr<ID3DBlob> compiledPS = nullptr;
-    sts = D3DCompileFromFile(L"D3D11VertexShader.hlsl", nullptr, nullptr, "PSmain", "ps_5_0", 0, 0, &compiledPS, &errorBlob);
+    sts = D3DCompileFromFile(L"D3D11Shader.hlsl", nullptr, nullptr, "PSmain", "ps_5_0", 0, 0, &compiledPS, &errorBlob);
     if (FAILED(sts))
     {
         // エラー表示
@@ -151,11 +151,12 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
 
     // セマンティクスの設定
     std::vector<D3D11_INPUT_ELEMENT_DESC> layout = {
-        {"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
+        {"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
+        {"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
     };
     
     // 頂点インプットレイアウト作成
-    sts = m_device->CreateInputLayout(&layout[0], layout.size(), compiledVS->GetBufferPointer(), compiledVS->GetBufferSize(), &m_spriteInputLayout);
+    sts = m_device->CreateInputLayout(&layout[0], (int)layout.size(), compiledVS->GetBufferPointer(), compiledVS->GetBufferSize(), &m_spriteInputLayout);
     if (FAILED(sts))
     {
         return -1;
