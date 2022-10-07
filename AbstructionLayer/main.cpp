@@ -2,7 +2,7 @@
 //
 
 #include "framework.h"
-#include "AbstructionLayer.h"
+#include "main.h"
 
 #include "D3D11Graphics.h"
 #include "D3D11System.h"
@@ -41,7 +41,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_ABSTRUCTIONLAYER));
+    // HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_ABSTRUCTIONLAYER));
 
     MSG msg;
 
@@ -65,6 +65,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
         // メイン処理
+        D3D11Update();
         D3D11Render();
 
         // バックバッファを表示
@@ -170,7 +171,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
+            // HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: HDC を使用する描画コードをここに追加してください...
             EndPaint(hWnd, &ps);
         }

@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 
+#include <random>
+
 int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
 {
     HRESULT sts;
@@ -42,9 +44,9 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
         featureLevels,
         _countof(featureLevels),
         D3D11_SDK_VERSION,
-        &m_device,
+        &m_pDevice,
         &futureLevel,
-        &m_deviceContext);
+        &m_pDeviceContext);
 
     if (FAILED(sts))
     {
@@ -74,7 +76,7 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
     scDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
     // スワップチェインの作成
-    sts = factory->CreateSwapChain(m_device.Get(), &scDesc, &m_swapChain);
+    sts = factory->CreateSwapChain(m_pDevice.Get(), &scDesc, &m_pSwapChain);
     if (FAILED(sts))
     {
         return -1;
@@ -82,7 +84,7 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
 
     // スワップチェインからバックバッファリソース取得
     ComPtr<ID3D11Texture2D> pBuckBuffer;
-    sts = m_swapChain->GetBuffer(0, IID_PPV_ARGS(&pBuckBuffer));
+    sts = m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBuckBuffer));
     if (FAILED(sts))
     {
         return -1;
@@ -92,74 +94,18 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
     D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
     rtvDesc.Format = scDesc.BufferDesc.Format;
     rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-    sts = m_device->CreateRenderTargetView(pBuckBuffer.Get(), &rtvDesc, &m_backBufferView);
+    sts = m_pDevice->CreateRenderTargetView(pBuckBuffer.Get(), &rtvDesc, &m_pBackBufferView);
     if (FAILED(sts))
     {
         return -1;
     }
 
     // RTVの設定
-    m_deviceContext->OMSetRenderTargets(1, m_backBufferView.GetAddressOf(), nullptr);
+    m_pDeviceContext->OMSetRenderTargets(1, m_pBackBufferView.GetAddressOf(), nullptr);
 
     // ビューポートの設定
     D3D11_VIEWPORT vp = { 0.0f,0.0f,(float)width,(float)height,0.0f,1.0f };
-    m_deviceContext->RSSetViewports(1, &vp);
-
-    //---------------------------------------------------------------------------
-    // シェーダー設定
-    //---------------------------------------------------------------------------
-    ComPtr<ID3DBlob> errorBlob = nullptr;
-    // 頂点シェーダー
-    ComPtr<ID3DBlob> compiledVS = nullptr;
-    sts = D3DCompileFromFile(L"D3D11Shader.hlsl", nullptr, nullptr, "VSmain", "vs_5_0", 0, 0, &compiledVS, &errorBlob);
-    if (FAILED(sts))
-    {
-        // エラー表示
-        std::string errorStr;
-        errorStr.resize(errorBlob->GetBufferSize());
-        std::copy_n((char*)errorBlob->GetBufferPointer(),
-            errorBlob->GetBufferSize(),
-            errorStr.begin());
-        return -1;
-    }
-    sts = m_device->CreateVertexShader(compiledVS->GetBufferPointer(), compiledVS->GetBufferSize(), nullptr, &m_spriteVS);
-    if (FAILED(sts))
-    {
-        return -1;
-    }
-
-    // ピクセルシェーダー
-    ComPtr<ID3DBlob> compiledPS = nullptr;
-    sts = D3DCompileFromFile(L"D3D11Shader.hlsl", nullptr, nullptr, "PSmain", "ps_5_0", 0, 0, &compiledPS, &errorBlob);
-    if (FAILED(sts))
-    {
-        // エラー表示
-        std::string errorStr;
-        errorStr.resize(errorBlob->GetBufferSize());
-        std::copy_n((char*)errorBlob->GetBufferPointer(),
-            errorBlob->GetBufferSize(),
-            errorStr.begin());
-        return -1;
-    }
-    sts = m_device->CreatePixelShader(compiledPS->GetBufferPointer(), compiledPS->GetBufferSize(), nullptr, &m_spritePS);
-    if (FAILED(sts))
-    {
-        return -1;
-    }
-
-    // セマンティクスの設定
-    std::vector<D3D11_INPUT_ELEMENT_DESC> layout = {
-        {"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
-        {"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
-        {"COLOR",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
-    };
-    
-    // 頂点インプットレイアウト作成
-    sts = m_device->CreateInputLayout(&layout[0], (int)layout.size(), compiledVS->GetBufferPointer(), compiledVS->GetBufferSize(), &m_spriteInputLayout);
-    if (FAILED(sts))
-    {
-        return -1;
-    }
+    m_pDeviceContext->RSSetViewports(1, &vp);
 
     // 深度バッファの作成
     D3D11_TEXTURE2D_DESC txDesc = {};
@@ -174,7 +120,7 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
     txDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     txDesc.CPUAccessFlags = 0;
     txDesc.MiscFlags = 0;
-    sts = D3D11Graphics::GetInstance().getDevPtr()->CreateTexture2D(&txDesc, NULL, &m_depthStencilTexture);
+    sts = D3D11Graphics::GetInstance().getDevPtr()->CreateTexture2D(&txDesc, NULL, &m_pDepthStencilTexture);
     if (FAILED(sts))
     {
         return -1;
@@ -184,11 +130,88 @@ int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
     dsDesc.Format = txDesc.Format;
     dsDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     dsDesc.Texture2D.MipSlice = 0;
-    sts = D3D11Graphics::GetInstance().getDevPtr()->CreateDepthStencilView(m_depthStencilTexture.Get(), &dsDesc, &m_depthStencilView);
+    sts = D3D11Graphics::GetInstance().getDevPtr()->CreateDepthStencilView(m_pDepthStencilTexture.Get(), &dsDesc, &m_pDepthStencilView);
     if (FAILED(sts))
     {
         return -1;
     }
+
+    //---------------------------------------------------------------------------
+    // シェーダー設定
+    //---------------------------------------------------------------------------
+    ComPtr<ID3DBlob> errorBlob = nullptr;
+    // 頂点シェーダー
+    ComPtr<ID3DBlob> compiledVS = nullptr;
+    sts = D3DCompileFromFile(
+        L"D3D11Shader.hlsl",
+        nullptr, nullptr,
+        "VSmain", "vs_5_0",
+        0, 0,
+        &compiledVS,
+        &errorBlob);
+    if (FAILED(sts))
+    {
+        // エラー表示
+        std::string errorStr;
+        errorStr.resize(errorBlob->GetBufferSize());
+        std::copy_n((char*)errorBlob->GetBufferPointer(),
+            errorBlob->GetBufferSize(),
+            errorStr.begin());
+        return -1;
+    }
+    sts = m_pDevice->CreateVertexShader(
+        compiledVS->GetBufferPointer(),
+        compiledVS->GetBufferSize(),
+        nullptr, &m_pSpriteVS);
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+
+    // ピクセルシェーダー
+    ComPtr<ID3DBlob> compiledPS = nullptr;
+    sts = D3DCompileFromFile(
+        L"D3D11Shader.hlsl",
+        nullptr, nullptr,
+        "PSmain", "ps_5_0",
+        0, 0,
+        &compiledPS,
+        &errorBlob);
+    if (FAILED(sts))
+    {
+        // エラー表示
+        std::string errorStr;
+        errorStr.resize(errorBlob->GetBufferSize());
+        std::copy_n((char*)errorBlob->GetBufferPointer(),
+            errorBlob->GetBufferSize(),
+            errorStr.begin());
+        return -1;
+    }
+    sts = m_pDevice->CreatePixelShader(compiledPS->GetBufferPointer(), compiledPS->GetBufferSize(), nullptr, &m_pSpritePS);
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+
+    // セマンティクスの設定
+    std::vector<D3D11_INPUT_ELEMENT_DESC> layout = {
+        {"POSITION" ,0,DXGI_FORMAT_R32G32B32_FLOAT,     0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
+        {"TEXCOORD" ,0,DXGI_FORMAT_R32G32_FLOAT,        0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
+        {"COLOR"    ,0,DXGI_FORMAT_R32G32B32A32_FLOAT,  0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
+    };
+
+    // 頂点インプットレイアウト作成
+    sts = m_pDevice->CreateInputLayout(
+        &layout[0], static_cast<UINT>(layout.size()),
+        compiledVS->GetBufferPointer(),
+        compiledVS->GetBufferSize(),
+        &m_pSpriteInputLayout);
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+
+
 
     return 0;
 }
@@ -197,14 +220,14 @@ void D3D11Graphics::CreateInstance()
 {
     DeleteInstance();
 
-    s_instance = new D3D11Graphics();
+    s_pInstance = new D3D11Graphics();
 }
 
 void D3D11Graphics::DeleteInstance()
 {
-    if (s_instance != nullptr)
+    if (s_pInstance != nullptr)
     {
-        delete s_instance;
-        s_instance = nullptr;
+        delete s_pInstance;
+        s_pInstance = nullptr;
     }
 }

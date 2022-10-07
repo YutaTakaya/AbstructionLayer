@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="D3D11">
+      <UniqueIdentifier>{caed23eb-7d5f-4638-9902-18c81912fffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D11\source">
+      <UniqueIdentifier>{18540857-c012-41cf-af99-a842d4ed12f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D11\hedder">
+      <UniqueIdentifier>{7290b778-5807-41d5-9f16-60249b37670e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -24,37 +33,37 @@
     <ClInclude Include="Resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="AbstructionLayer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="D3D11Graphics.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="D3D11System.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjData.h">
+    <ClInclude Include="main.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="D3D11Camera.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>D3D11\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Graphics.h">
+      <Filter>D3D11\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11System.h">
+      <Filter>D3D11\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjData.h">
+      <Filter>D3D11\hedder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AbstructionLayer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="D3D11Graphics.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="D3D11System.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjData.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="D3D11Camera.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>D3D11\source</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Graphics.cpp">
+      <Filter>D3D11\source</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11System.cpp">
+      <Filter>D3D11\source</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjData.cpp">
+      <Filter>D3D11\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

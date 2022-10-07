@@ -8,61 +8,48 @@
 #include "D3D11Graphics.h"
 #include "D3D11Camera.h"
 
-
-ObjData g_objdata;
-
-struct TexColor 
-{
-    unsigned char R, G, B, A;
-};
-std::vector<TexColor> g_texData(256 * 256); // テクスチャデータ（仮置き）
+ObjData g_testObj1;
+ObjData g_testObj2;
 
 int D3D11Init()
 {
-    for (auto& tex : g_texData)
-    {
-        tex.R = rand() % 256;
-        tex.G = rand() % 256;
-        tex.B = rand() % 256;
-        tex.A = rand() % 256;
-    }
-
     VertexData v[] = {
+        //////          座標           //////  /////        UV        //////  //////          カラー          //////
         // 前面
-        {DirectX::XMFLOAT3(-1.0f, 1.0f,-1.0f),      DirectX::XMFLOAT2(1.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,1.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3( 1.0f, 1.0f,-1.0f),      DirectX::XMFLOAT2(1.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,1.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3(-1.0f,-1.0f,-1.0f),      DirectX::XMFLOAT2(1.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,1.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3( 1.0f,-1.0f,-1.0f),      DirectX::XMFLOAT2(1.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,1.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f, 3.0f,-3.0f), DirectX::XMFLOAT2(0.0f,0.0f), DirectX::XMFLOAT4(1.0f,1.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f, 3.0f,-3.0f), DirectX::XMFLOAT2(1.0f,0.0f), DirectX::XMFLOAT4(1.0f,1.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f,-3.0f,-3.0f), DirectX::XMFLOAT2(0.0f,1.0f), DirectX::XMFLOAT4(1.0f,1.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f,-3.0f,-3.0f), DirectX::XMFLOAT2(1.0f,1.0f), DirectX::XMFLOAT4(1.0f,1.0f,1.0f,1.0f)},
 
         // 左面
-        {DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,1.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3(-1.0f, 1.0f,-1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,1.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3(-1.0f,-1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,1.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3(-1.0f,-1.0f,-1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,1.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f, 3.0f, 3.0f), DirectX::XMFLOAT2(0.0f,0.0f), DirectX::XMFLOAT4(0.0f,1.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f, 3.0f,-3.0f), DirectX::XMFLOAT2(1.0f,0.0f), DirectX::XMFLOAT4(0.0f,1.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f,-3.0f, 3.0f), DirectX::XMFLOAT2(0.0f,1.0f), DirectX::XMFLOAT4(0.0f,1.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f,-3.0f,-3.0f), DirectX::XMFLOAT2(1.0f,1.0f), DirectX::XMFLOAT4(0.0f,1.0f,1.0f,1.0f)},
 
         // 右面
-        {DirectX::XMFLOAT3( 1.0f, 1.0f,-1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,0.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3( 1.0f, 1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,0.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3( 1.0f,-1.0f,-1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,0.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3( 1.0f,-1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,0.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f, 3.0f,-3.0f), DirectX::XMFLOAT2(0.0f,0.0f), DirectX::XMFLOAT4(1.0f,0.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f, 3.0f, 3.0f), DirectX::XMFLOAT2(1.0f,0.0f), DirectX::XMFLOAT4(1.0f,0.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f,-3.0f,-3.0f), DirectX::XMFLOAT2(0.0f,1.0f), DirectX::XMFLOAT4(1.0f,0.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f,-3.0f, 3.0f), DirectX::XMFLOAT2(1.0f,1.0f), DirectX::XMFLOAT4(1.0f,0.0f,1.0f,1.0f)},
 
         // 後面
-        {DirectX::XMFLOAT3( 1.0f, 1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,1.0f,0.0f,1.0f)},
-        {DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,1.0f,0.0f,1.0f)},
-        {DirectX::XMFLOAT3( 1.0f,-1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,1.0f,0.0f,1.0f)},
-        {DirectX::XMFLOAT3(-1.0f,-1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(1.0f,1.0f,0.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f, 3.0f, 3.0f), DirectX::XMFLOAT2(0.0f,0.0f), DirectX::XMFLOAT4(1.0f,1.0f,0.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f, 3.0f, 3.0f), DirectX::XMFLOAT2(1.0f,0.0f), DirectX::XMFLOAT4(1.0f,1.0f,0.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f,-3.0f, 3.0f), DirectX::XMFLOAT2(0.0f,1.0f), DirectX::XMFLOAT4(1.0f,1.0f,0.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f,-3.0f, 3.0f), DirectX::XMFLOAT2(1.0f,1.0f), DirectX::XMFLOAT4(1.0f,1.0f,0.0f,1.0f)},
 
         // 上面
-        {DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,1.0f,0.0f,1.0f)},
-        {DirectX::XMFLOAT3( 1.0f, 1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,1.0f,0.0f,1.0f)},
-        {DirectX::XMFLOAT3(-1.0f, 1.0f,-1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,1.0f,0.0f,1.0f)},
-        {DirectX::XMFLOAT3( 1.0f, 1.0f,-1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,1.0f,0.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f, 3.0f, 3.0f), DirectX::XMFLOAT2(0.0f,0.0f), DirectX::XMFLOAT4(0.0f,1.0f,0.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f, 3.0f, 3.0f), DirectX::XMFLOAT2(1.0f,0.0f), DirectX::XMFLOAT4(0.0f,1.0f,0.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f, 3.0f,-3.0f), DirectX::XMFLOAT2(0.0f,1.0f), DirectX::XMFLOAT4(0.0f,1.0f,0.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f, 3.0f,-3.0f), DirectX::XMFLOAT2(1.0f,1.0f), DirectX::XMFLOAT4(0.0f,1.0f,0.0f,1.0f)},
 
         // 下面
-        {DirectX::XMFLOAT3(-1.0f,-1.0f,-1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,0.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3( 1.0f,-1.0f,-1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,0.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3(-1.0f,-1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,0.0f,1.0f,1.0f)},
-        {DirectX::XMFLOAT3( 1.0f,-1.0f, 1.0f),      DirectX::XMFLOAT2(0.0f,0.0f)    ,DirectX::XMFLOAT4(0.0f,0.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f,-3.0f,-3.0f), DirectX::XMFLOAT2(0.0f,0.0f), DirectX::XMFLOAT4(0.0f,0.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f,-3.0f,-3.0f), DirectX::XMFLOAT2(1.0f,0.0f), DirectX::XMFLOAT4(0.0f,0.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3(-3.0f,-3.0f, 3.0f), DirectX::XMFLOAT2(0.0f,1.0f), DirectX::XMFLOAT4(0.0f,0.0f,1.0f,1.0f)},
+        {DirectX::XMFLOAT3( 3.0f,-3.0f, 3.0f), DirectX::XMFLOAT2(1.0f,1.0f), DirectX::XMFLOAT4(0.0f,0.0f,1.0f,1.0f)},
     };
 
     WORD index[] = {
@@ -83,26 +70,40 @@ int D3D11Init()
         17,19,18,
         // 下面
         20,21,22,
-        21,23,22
+        21,23,22,
     };
 
-    g_objdata.ObjInit(
+    // オブジェクト初期化
+    g_testObj1.ObjInit(
         v, sizeof(v) / sizeof(VertexData),
         index,sizeof(index)/sizeof(WORD));
+    g_testObj1.ObjTranslate(5, 0, 0);
 
+    g_testObj2.ObjInit(
+        v, sizeof(v) / sizeof(VertexData),
+        index, sizeof(index) / sizeof(WORD));
+    g_testObj2.ObjTranslate(0, 0, 10);
+
+    // カメラ初期化
     D3D11Camera::GetInstance().CreateInstance();
-
     DirectX::XMFLOAT3 eye = { 0, 0, -20 };
     DirectX::XMFLOAT3 lookat = { 0, 0, 1 };
     DirectX::XMFLOAT3 up = { 0, 1, 0 };
     D3D11Camera::GetInstance().CameraInit(eye, lookat, up);
 
-
     return 0;
 }
 
+void D3D11Update()
+{
+    g_testObj1.ObjUpdate();
+    g_testObj2.ObjUpdate();
+    g_testObj1.ObjRotate(0.01f, 0.02f, 0.03f);
+    g_testObj2.ObjRotate(-0.01f, -0.02f, -0.01f);
+}
 
-int D3D11Render()
+
+void D3D11Render()
 {
     float color[4] = { 0.2f,0.2f,0.2f,1.0f };
     D3D11Graphics::GetInstance().getDevContextPtr()->ClearRenderTargetView(
@@ -113,16 +114,14 @@ int D3D11Render()
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 
         1.0f, 
         0);
-    
-    D3D11Camera::GetInstance().CameraDraw();
 
-    g_objdata.ObjDraw();
-    return 0;
+    g_testObj1.ObjDraw();
+    g_testObj2.ObjDraw();
 }
 
 
-int D3D11Uninit()
+void D3D11Uninit()
 {
-    g_objdata.ObjUninit();
-    return 0;
+    g_testObj1.ObjUninit();
+    g_testObj2.ObjUninit();
 }

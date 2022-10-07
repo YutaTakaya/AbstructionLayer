@@ -6,9 +6,9 @@
 #include "D3D11Camera.h"
 
 int D3D11Camera::CameraInit(
-    const DirectX::XMFLOAT3 eye, 
-    const DirectX::XMFLOAT3 lookat, 
-    const DirectX::XMFLOAT3 up)
+    const XMFLOAT3 eye, 
+    const XMFLOAT3 lookat, 
+    const XMFLOAT3 up)
 {
     // コンスタントバッファの作成
     D3D11_BUFFER_DESC cbDesc;
@@ -20,53 +20,49 @@ int D3D11Camera::CameraInit(
     cbDesc.StructureByteStride = 0;
 
     HRESULT sts = D3D11Graphics::GetInstance().getDevPtr()->
-        CreateBuffer(&cbDesc, NULL, &m_constBuffer);
+        CreateBuffer(&cbDesc, NULL, &m_pConstBuffer);
     if (FAILED(sts))
     {
         return -1;
     }
 
     // ワールド変換行列の作成
-    m_worldMtx = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+    m_pWorldMtx = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
     
     // ビュー変換行列の作成
-    DirectX::XMVECTOR eyeVec = DirectX::XMVectorSet(eye.x, eye.y, eye.z, 0);
-    DirectX::XMVECTOR lookatVec = DirectX::XMVectorSet(lookat.x, lookat.y, lookat.z, 0);
-    DirectX::XMVECTOR upVec = DirectX::XMVectorSet(up.x, up.y, up.z, 0);
-    m_viewMtx = DirectX::XMMatrixLookAtLH(eyeVec, lookatVec, upVec);
+    XMVECTOR eyeVec = XMVectorSet(eye.x, eye.y, eye.z, 0);
+    XMVECTOR lookatVec = XMVectorSet(lookat.x, lookat.y, lookat.z, 0);
+    XMVECTOR upVec = XMVectorSet(up.x, up.y, up.z, 0);
+    m_pViewMtx = XMMatrixLookAtLH(eyeVec, lookatVec, upVec);
 
     // プロジェクション行列の作成
-    constexpr float fov = DirectX::XMConvertToRadians(45.0f); // 視野角
+    constexpr float fov = XMConvertToRadians(45.0f); // 視野角
     float aspect = 16.0f / 9.0f;
     float nearclip = 0.1f;
-    float farclip = 100.0f;
-    m_projMtx = DirectX::XMMatrixPerspectiveFovLH(fov, aspect, nearclip, farclip);
+    float farclip = 1000.0f;
+    m_pProjMtx = XMMatrixPerspectiveFovLH(fov, aspect, nearclip, farclip);
 
     // 定数バッファへの入力
     ConstantBuffer cb;
-    XMStoreFloat4x4(&cb.world, DirectX::XMMatrixTranspose(m_worldMtx));
-    XMStoreFloat4x4(&cb.view, DirectX::XMMatrixTranspose(m_viewMtx));
-    XMStoreFloat4x4(&cb.projection, DirectX::XMMatrixTranspose(m_projMtx));
+    XMStoreFloat4x4(&cb.world, XMMatrixTranspose(m_pWorldMtx));
+    XMStoreFloat4x4(&cb.view, XMMatrixTranspose(m_pViewMtx));
+    XMStoreFloat4x4(&cb.projection, XMMatrixTranspose(m_pProjMtx));
     D3D11Graphics::GetInstance().getDevContextPtr()->
-        UpdateSubresource(m_constBuffer.Get(), 0, NULL, &cb, 0, 0);
+        UpdateSubresource(m_pConstBuffer.Get(), 0, NULL, &cb, 0, 0);
     return 0;
 }
 
-int D3D11Camera::CameraDraw()
+int D3D11Camera::CameraUpdateConstBuff(const XMMATRIX worldMtx)
 {
-    m_worldMtx = DirectX::XMMatrixMultiply(m_worldMtx, DirectX::XMMatrixRotationX(0.009f));
-    m_worldMtx = DirectX::XMMatrixMultiply(m_worldMtx, DirectX::XMMatrixRotationY(0.006f));
-    m_worldMtx = DirectX::XMMatrixMultiply(m_worldMtx, DirectX::XMMatrixRotationZ(0.003f));
-
     // 定数バッファへの入力
     ConstantBuffer cb;
-    XMStoreFloat4x4(&cb.world, DirectX::XMMatrixTranspose(m_worldMtx));
-    XMStoreFloat4x4(&cb.view, DirectX::XMMatrixTranspose(m_viewMtx));
-    XMStoreFloat4x4(&cb.projection, DirectX::XMMatrixTranspose(m_projMtx));
+    XMStoreFloat4x4(&cb.world, XMMatrixTranspose(worldMtx));
+    XMStoreFloat4x4(&cb.view, XMMatrixTranspose(m_pViewMtx));
+    XMStoreFloat4x4(&cb.projection, XMMatrixTranspose(m_pProjMtx));
     D3D11Graphics::GetInstance().getDevContextPtr()->
-        UpdateSubresource(m_constBuffer.Get(), 0, NULL, &cb, 0, 0);
+        UpdateSubresource(m_pConstBuffer.Get(), 0, NULL, &cb, 0, 0);
     D3D11Graphics::GetInstance().getDevContextPtr()->
-        VSSetConstantBuffers(0, 1, m_constBuffer.GetAddressOf());
+        VSSetConstantBuffers(0, 1, m_pConstBuffer.GetAddressOf());
     return 0;
 }
 
@@ -74,14 +70,14 @@ void D3D11Camera::CreateInstance()
 {
     DeleteInstance();
 
-    s_instance = new D3D11Camera();
+    s_pInstance = new D3D11Camera();
 }
 
 void D3D11Camera::DeleteInstance()
 {
-    if (s_instance != nullptr)
+    if (s_pInstance != nullptr)
     {
-        delete s_instance;
-        s_instance = nullptr;
+        delete s_pInstance;
+        s_pInstance = nullptr;
     }
 }

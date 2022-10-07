@@ -52,7 +52,7 @@ public:
 	//--------------------------------------------- 
 	static D3D11Graphics& GetInstance()
 	{
-		return *s_instance;
+		return *s_pInstance;
 	}
 
 	//---------------------------------------------
@@ -62,7 +62,7 @@ public:
 	//--------------------------------------------- 
 	ID3D11Device* getDevPtr()
 	{
-		return m_device.Get();
+		return m_pDevice.Get();
 	}
 
 	//---------------------------------------------
@@ -72,7 +72,7 @@ public:
 	//--------------------------------------------- 
 	ID3D11DeviceContext* getDevContextPtr()
 	{
-		return m_deviceContext.Get();
+		return m_pDeviceContext.Get();
 	}
 
 	//---------------------------------------------
@@ -82,7 +82,17 @@ public:
 	//--------------------------------------------- 
 	ID3D11RenderTargetView* getBackBufferVierPtr()
 	{
-		return m_backBufferView.Get();
+		return m_pBackBufferView.Get();
+	}
+
+	//---------------------------------------------
+	/// バックバッファビューのダブルポインタを取得する
+	/// 
+	/// \return バックバッファビューのダブルポインタ
+	//--------------------------------------------- 
+	ID3D11RenderTargetView** getBackBufferVierDPtr()
+	{
+		return m_pBackBufferView.GetAddressOf();
 	}
 
 	//---------------------------------------------
@@ -92,7 +102,7 @@ public:
 	//--------------------------------------------- 
 	IDXGISwapChain* getSwapChainPtr()
 	{
-		return m_swapChain.Get();
+		return m_pSwapChain.Get();
 	}
 
 	//---------------------------------------------
@@ -102,7 +112,7 @@ public:
 	//--------------------------------------------- 
 	ID3D11VertexShader* getVertexShaderPtr()
 	{
-		return m_spriteVS.Get();
+		return m_pSpriteVS.Get();
 	}
 
 	//---------------------------------------------
@@ -112,7 +122,7 @@ public:
 	//--------------------------------------------- 
 	ID3D11PixelShader* getPixelShaderPtr()
 	{
-		return m_spritePS.Get();
+		return m_pSpritePS.Get();
 	}
 
 	//---------------------------------------------
@@ -122,17 +132,17 @@ public:
 	//--------------------------------------------- 
 	ID3D11InputLayout* getInputLayoutPtr()
 	{
-		return m_spriteInputLayout.Get();
+		return m_pSpriteInputLayout.Get();
 	}
 
 	//---------------------------------------------
-	/// レンダーターゲットビューのポインタを取得する
+	/// レンダーターゲットビューのダブルポインタを取得する
 	/// 
-	/// \return レンダーターゲットビューのポインタ
+	/// \return レンダーターゲットビューのダブルポインタ
 	//--------------------------------------------- 
-	ID3D11RenderTargetView** getRenderTargetVierPtr()
+	ID3D11RenderTargetView** getRenderTargetVierDPtr()
 	{
-		return m_renderTargetView.GetAddressOf();
+		return m_pRenderTargetView.GetAddressOf();
 	}
 
 	//---------------------------------------------
@@ -142,7 +152,7 @@ public:
 	//--------------------------------------------- 
 	ID3D11DepthStencilView* getDepthStencilVierPtr()
 	{
-		return m_depthStencilView.Get();
+		return m_pDepthStencilView.Get();
 	}
 
 	//---------------------------------------------------------------------------
@@ -150,34 +160,35 @@ protected:
 
 private:
 	//---------------------------------------------------------------------------
-    ComPtr<ID3D11Device>    m_device;
-    ComPtr<ID3D11DeviceContext> m_deviceContext;
-    ComPtr<ID3D11RenderTargetView>  m_backBufferView;
-    ComPtr<IDXGISwapChain>  m_swapChain;
-	ComPtr<ID3D11Texture2D> m_depthStencilTexture;
-	ComPtr<ID3D11RenderTargetView>	m_renderTargetView;
-	ComPtr<ID3D11DepthStencilView>	m_depthStencilView;
+    ComPtr<ID3D11Device>    m_pDevice;
+    ComPtr<ID3D11DeviceContext> m_pDeviceContext;
+    ComPtr<ID3D11RenderTargetView>  m_pBackBufferView;
+    ComPtr<IDXGISwapChain>  m_pSwapChain;
+	ComPtr<ID3D11Texture2D> m_pDepthStencilTexture;
+	ComPtr<ID3D11RenderTargetView>	m_pRenderTargetView;
+	ComPtr<ID3D11DepthStencilView>	m_pDepthStencilView;
 
-	ComPtr<ID3D11VertexShader> m_spriteVS = nullptr;
-	ComPtr<ID3D11PixelShader> m_spritePS = nullptr;
-	ComPtr<ID3D11InputLayout> m_spriteInputLayout = nullptr;
+	ComPtr<ID3D11VertexShader> m_pSpriteVS = nullptr;
+	ComPtr<ID3D11PixelShader> m_pSpritePS = nullptr;
+	ComPtr<ID3D11InputLayout> m_pSpriteInputLayout = nullptr;
 
-	static inline D3D11Graphics* s_instance;
+	static inline D3D11Graphics* s_pInstance;
 	//---------------------------------------------------------------------------
 	/// <summary>
-	/// m_device				D3D11デバイス
-	/// m_deviceContext			D3D11デバイスコンテキスト
-	/// m_backBufferView		D3D11バックバッファ―ビュー
-	/// m_swapChain				スワップチェイン
-	/// m_depthStencilTexture	深度ステンシルテクスチャ
-	/// m_renderTargetView		RTV
-	/// m_depthStencilView		深度ステンシルビュー
+	/// m_pDevice				D3D11デバイス
+	/// m_pDeviceContext			D3D11デバイスコンテキスト
+	/// m_pBackBufferView		D3D11バックバッファ―ビュー
+	/// m_pSwapChain				スワップチェイン
+	/// m_pDepthStencilTexture	深度ステンシルテクスチャ
+	/// m_pRenderTargetView		RTV
+	/// m_pDepthStencilView		深度ステンシルビュー
+
 	/// 
-	/// m_spriteVS				頂点シェーダー情報
-	/// m_spritePS				ピクセルシェーダー情報
-	/// m_spriteInputLayout		入力レイアウト情報
+	/// m_pSpriteVS				頂点シェーダー情報
+	/// m_pSpritePS				ピクセルシェーダー情報
+	/// m_pSpriteInputLayout		入力レイアウト情報
 	/// 
-	/// s_instance				インスタンス
+	/// s_pInstance				インスタンス
 	/// </summary>
 
 
@@ -189,8 +200,4 @@ private:
 	//--------------------------------------------- 
 	D3D11Graphics() {}
 	//---------------------------------------------------------------------------
-
-
 };
-
-

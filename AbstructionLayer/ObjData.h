@@ -6,13 +6,14 @@
 #pragma once
 
 #include "D3D11Graphics.h"
+#include "D3D11Camera.h"
 #include <vector>
 
 struct VertexData
 {
-    DirectX::XMFLOAT3 pos;
-    DirectX::XMFLOAT2 uv;
-    DirectX::XMFLOAT4 col;
+    XMFLOAT3 pos;
+    XMFLOAT2 uv;
+    XMFLOAT4 col;
 };
 
 class ObjData
@@ -36,18 +37,53 @@ public:
         /*[in]*/    const int indexNum);
 
     //---------------------------------------------
+    /// 行列の更新
+    ///
+    /// \return void
+    //--------------------------------------------- 
+    void ObjUpdate();
+
+    //---------------------------------------------
     /// 頂点情報を用いたDirectX11での描画処理
     ///
-    /// \return 正常に終了した場合0が返される
+    /// \return void
     //--------------------------------------------- 
-    int ObjDraw();
+    void ObjDraw();
 
     //---------------------------------------------
     /// メンバ変数の解放処理
     ///
-    /// \return 正常に終了した場合0が返される
+    /// \return void
     //--------------------------------------------- 
-    int ObjUninit();
+    void ObjUninit();
+
+    //---------------------------------------------
+    /// ワールド変換行列の回転角を変更する
+    /// 
+    /// \param[in] (angleX)     度数法でのX軸回転度数
+    /// \param[in] (angleY)     度数法でのY軸回転度数
+    /// \param[in] (angleZ)     度数法でのZ軸回転度数
+    ///
+    /// \return void
+    //--------------------------------------------- 
+    void ObjRotate(
+        /*[in]*/    const float angleX,
+        /*[in]*/    const float angleY,
+        /*[in]*/    const float angleZ);
+
+    //---------------------------------------------
+    /// ワールド変換行列の座標を変更する
+    /// 
+    /// \param[in] (posX)     X座標
+    /// \param[in] (posY)     Y座標
+    /// \param[in] (posZ)     Z座標
+    ///
+    /// \return void
+    //--------------------------------------------- 
+    void ObjTranslate(
+        /*[in]*/    const float posX,
+        /*[in]*/    const float posY,
+        /*[in]*/    const float posZ);
 
     //---------------------------------------------------------------------------
 
@@ -57,17 +93,26 @@ private:
     //---------------------------------------------------------------------------
     std::vector<VertexData> m_vertex;
     std::vector<WORD> m_index;
-    ComPtr<ID3D11Buffer> m_vertexBuff;
-    ComPtr<ID3D11Buffer> m_indexBuff;
-    ComPtr<ID3D11Buffer> m_texBuff;
+    ComPtr<ID3D11Buffer> m_pVertexBuff;
+    ComPtr<ID3D11Buffer> m_pIndexBuff;
+
+    ComPtr<ID3D11Texture2D>	m_pTexture;
+    ComPtr<ID3D11ShaderResourceView>	m_pShaderResourceView;
+    ComPtr<ID3D11SamplerState>	m_pSamplerState;
+
+    XMFLOAT3 m_worldPos;
+    XMMATRIX m_localMtx;
     //---------------------------------------------------------------------------
     /// <summary>
-    /// m_vertex        頂点情報
-    /// m_index         インデックスデータ
-    /// m_vertexBuff    頂点バッファ
-    /// m_indexBuff     インデックスバッファ
-    /// m_textureBuff   テクスチャバッファ
+    /// m_vertex                頂点情報
+    /// m_index                 インデックスデータ
+    /// m_vertexBuff            頂点バッファ
+    /// m_indexBuff             インデックスバッファ
+    /// m_texture               テクスチャバッファ
+    /// m_shaderResourceView	シェーダーリソースビュー
+	/// m_samplerState			サンプラーステート
+	/// 
+	/// m_worldPos              ワールド座標
+	/// m_localMtx              ワールド変換行列
     /// </summary>
 };
-
-//  TODO : ワールド変換行列の作成及びCameraクラスからの引き離し
