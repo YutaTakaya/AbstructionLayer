@@ -30,7 +30,7 @@ public:
 	///
 	/// \return エラーの場合-1、正常に終了した場合0が返される
 	//--------------------------------------------- 
-    int InitD3D11(
+    int D3D11Init(
 		/*[in]*/	const HWND hWnd,
 		/*[in]*/	const int width,
 		/*[in]*/	const int height);

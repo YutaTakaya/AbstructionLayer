@@ -11,7 +11,7 @@
 
 #include <random>
 
-int D3D11Graphics::InitD3D11(HWND hWnd, int width, int height)
+int D3D11Graphics::D3D11Init(HWND hWnd, int width, int height)
 {
     HRESULT sts;
 
