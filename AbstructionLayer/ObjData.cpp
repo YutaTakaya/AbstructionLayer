@@ -84,12 +84,16 @@ int ObjData::ObjInit(const VertexData* p_VData, const int vNum, const WORD* p_in
     // テクスチャ書き換え（チェック柄）
     const int texSize = 32;
     D3D11_MAPPED_SUBRESOURCE msr = {};
-    D3D11Graphics::GetInstance().getDevContextPtr()->Map(
+    sts = D3D11Graphics::GetInstance().getDevContextPtr()->Map(
         m_pTexture.Get(), 
         0, 
         D3D11_MAP_WRITE_DISCARD, 
         0, &msr);
 
+    if (FAILED(sts))
+    {
+        return -1;
+    }
     byte texData[texSize * texSize * 4] = { 0 };
     for (int x = 0; x < texSize; x++)
     {

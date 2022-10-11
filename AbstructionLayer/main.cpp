@@ -7,7 +7,14 @@
 #include "D3D11Graphics.h"
 #include "D3D11System.h"
 
+#include "D3D12Graphics.h"
+#include "D3D12System.h"
+
 #define MAX_LOADSTRING 100
+
+// 環境切り替え
+//#define D3D11
+#define D3D12
 
 // グローバル変数:
 HINSTANCE hInst;                                // 現在のインターフェイス
@@ -44,8 +51,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_ABSTRUCTIONLAYER));
 
     MSG msg;
-
+#ifdef D3D11
     D3D11Init();
+#endif // D3D11
+
+#ifdef D3D12
+    D3D12Init();
+#endif // D3D12
+
     // メインループ
     while (1)
     {
@@ -65,14 +78,30 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
         // メイン処理
+#ifdef D3D11
         D3D11Update();
         D3D11Render();
-
         // バックバッファを表示
         D3D11Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);
+#endif // D3D11
+
+#ifdef D3D12
+        D3D12Update();
+        D3D12Render();
+        // バックバッファを表示
+        D3D12Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);
+#endif // D3D12
     }
+
+#ifdef D3D11
     D3D11Uninit();
     D3D11Graphics::DeleteInstance();
+#endif // D3D11
+
+#ifdef D3D12
+    D3D12Uninit();
+    D3D12Graphics::DeleteInstance();
+#endif // D3D12
     return (int) msg.wParam;
 }
 
@@ -125,12 +154,22 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
       return FALSE;
    }
-
+#ifdef D3D11
    D3D11Graphics::CreateInstance();
-   if (D3D11Graphics::GetInstance().InitD3D11(hWnd, 1280, 720) == -1)
+   if (D3D11Graphics::GetInstance().D3D11Init(hWnd, 1280, 720) == -1)
    {
        return -1;
    }
+#endif // D3D11
+
+#ifdef D3D12
+   D3D12Graphics::CreateInstance();
+   if (D3D12Graphics::GetInstance().D3D12Init(hWnd, 1280, 720) == -1)
+   {
+       return -1;
+   }
+#endif // D3D12
+
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
@@ -170,7 +209,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_PAINT:
         {
-            PAINTSTRUCT ps;
+            PAINTSTRUCT ps = {};
             // HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: HDC を使用する描画コードをここに追加してください...
             EndPaint(hWnd, &ps);

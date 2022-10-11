@@ -22,6 +22,15 @@
     <Filter Include="D3D11\hedder">
       <UniqueIdentifier>{7290b778-5807-41d5-9f16-60249b37670e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="D3D12">
+      <UniqueIdentifier>{31a8ce81-b7e2-4be2-a956-bdcedec2b476}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D12\source">
+      <UniqueIdentifier>{654a9b4a-d7bf-477c-88f2-591513119c1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D12\hedder">
+      <UniqueIdentifier>{a856d832-c00b-4df6-b6fa-5aedc664eb22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -48,6 +57,12 @@
     <ClInclude Include="ObjData.h">
       <Filter>D3D11\hedder</Filter>
     </ClInclude>
+    <ClInclude Include="D3D12Graphics.h">
+      <Filter>D3D12\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D12System.h">
+      <Filter>D3D12\hedder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -64,6 +79,12 @@
     </ClCompile>
     <ClCompile Include="ObjData.cpp">
       <Filter>D3D11\source</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D12Graphics.cpp">
+      <Filter>D3D12\source</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D12System.cpp">
+      <Filter>D3D12\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

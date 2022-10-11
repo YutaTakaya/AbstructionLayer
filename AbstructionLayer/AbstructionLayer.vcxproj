@@ -141,6 +141,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="D3D12Graphics.h" />
+    <ClInclude Include="D3D12System.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="D3D11Camera.h" />
     <ClInclude Include="D3D11Graphics.h" />
@@ -151,6 +153,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="D3D12Graphics.cpp" />
+    <ClCompile Include="D3D12System.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="D3D11Camera.cpp" />
     <ClCompile Include="D3D11Graphics.cpp" />
