@@ -23,14 +23,14 @@ public:
 	/// カメラ情報の初期設定とビュー変換行列、プロジェクション変換行列の初期化
 	///
 	/// \param[in] (eye)		カメラ位置
-	/// \param[in] (lockat)     カメラの注視点
+	/// \param[in] (lookat)     カメラの注視点
 	/// \param[in] (up)		カメラの上方向
 	///
 	/// \return エラーが出た場合-1が、正常に終了した場合0が返される
 	//--------------------------------------------- 
     int CameraInit(
         /*[in]*/    const XMFLOAT3 eye, 
-        /*[in]*/    const XMFLOAT3 lockat,
+        /*[in]*/    const XMFLOAT3 lookat,
         /*[in]*/    const XMFLOAT3 up);
 
 	//---------------------------------------------
