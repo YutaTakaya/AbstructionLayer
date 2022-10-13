@@ -22,20 +22,20 @@ using Microsoft::WRL::ComPtr;
 class D3D12Graphics
 {
 public:
-	//---------------------------------------------------------------------------
-	//---------------------------------------------
-	/// DirectX12の初期化関数
-	///
-	/// \param[in] ( hWnd )         ウィンドウハンドル
-	/// \param[in] ( width )        ウィンドウの幅
-	/// \param[in] ( height )       ウィンドウの高さ
-	///
-	/// \return エラーの場合-1、正常に終了した場合0が返される
-	//--------------------------------------------- 
-	int D3D12Init(
-		/*[in]*/	const HWND hWnd,
-		/*[in]*/	const int width,
-		/*[in]*/	const int height);
+    //---------------------------------------------------------------------------
+    //---------------------------------------------
+    /// DirectX12の初期化関数
+    ///
+    /// \param[in] ( hWnd )         ウィンドウハンドル
+    /// \param[in] ( width )        ウィンドウの幅
+    /// \param[in] ( height )       ウィンドウの高さ
+    ///
+    /// \return エラーの場合-1、正常に終了した場合0が返される
+    //--------------------------------------------- 
+    int D3D12Init(
+        /*[in]*/	const HWND hWnd,
+        /*[in]*/	const int width,
+        /*[in]*/	const int height);
 
     //---------------------------------------------
     /// DirectX12の描画事前処理
@@ -51,25 +51,25 @@ public:
     //--------------------------------------------- 
     int D3D12AfterRender();
 
-	//---------------------------------------------
-	/// インスタンスの作成
-	//--------------------------------------------- 
-	static void CreateInstance();
+    //---------------------------------------------
+    /// インスタンスの作成
+    //--------------------------------------------- 
+    static void CreateInstance();
 
-	//---------------------------------------------
-	/// インスタンスの削除
-	//--------------------------------------------- 
-	static void DeleteInstance();
+    //---------------------------------------------
+    /// インスタンスの削除
+    //--------------------------------------------- 
+    static void DeleteInstance();
 
-	//---------------------------------------------
-	/// インスタンスの取得
-	/// 
-	/// \return インスタンス
-	//--------------------------------------------- 
-	static D3D12Graphics& GetInstance()
-	{
-		return *s_pInstance;
-	}
+    //---------------------------------------------
+    /// インスタンスの取得
+    /// 
+    /// \return インスタンス
+    //--------------------------------------------- 
+    static D3D12Graphics& GetInstance()
+    {
+        return *s_pInstance;
+    }
 
     //---------------------------------------------
     /// デバイスのポインタを取得する
@@ -142,22 +142,22 @@ public:
         return m_pFence.Get();
     }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
 protected:
-    
+
 private:
-	//---------------------------------------------------------------------------
-	ComPtr<ID3D12Device>    m_pDevice;
-	ComPtr<IDXGISwapChain4>  m_pSwapChain;
+    //---------------------------------------------------------------------------
+    ComPtr<ID3D12Device>    m_pDevice;
+    ComPtr<IDXGISwapChain4>  m_pSwapChain;
     ComPtr<ID3D12GraphicsCommandList>   m_pCommandList;
     ComPtr<ID3D12CommandQueue>  m_pCommandQueue;
     ComPtr<ID3D12DescriptorHeap> m_pRtvHeaps;
     std::vector<ID3D12Resource*> m_pBackBuffers;
     ComPtr<ID3D12CommandAllocator>  m_pCommandAllocator;
     ComPtr<ID3D12Fence> m_pFence;
-    D3D12_VIEWPORT m_pViewport; // TODO : ユニークポインタ化
-    D3D12_RECT m_pScissorRect; // TODO : ユニークポインタ化
+    D3D12_VIEWPORT m_pViewport = {}; // TODO : ユニークポインタ化
+    D3D12_RECT m_pScissorRect = {}; // TODO : ユニークポインタ化
 
 	static inline D3D12Graphics* s_pInstance;
 	//---------------------------------------------------------------------------

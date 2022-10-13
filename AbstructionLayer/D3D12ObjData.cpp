@@ -14,12 +14,6 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
 {
     HRESULT sts;
 
-    XMFLOAT3 vertices[] = {
-        {-1.0f,-1.0f, 0.0f},
-        {-1.0f, 1.0f, 0.0f},
-        { 1.0f,-1.0f, 0.0f},
-    };
-
     // バーテックスバッファーの作成
     D3D12_HEAP_PROPERTIES heapprop = {};
     heapprop.Type = D3D12_HEAP_TYPE_UPLOAD;
@@ -30,8 +24,7 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
 
     D3D12_RESOURCE_DESC vbDesc = {};
     vbDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-    vbDesc.Width = sizeof(vertices);
-    //vbDesc.Width = sizeof(p_VData) * vNum;
+    vbDesc.Width = sizeof(p_VData) * vNum;
     vbDesc.Height = 1;
     vbDesc.DepthOrArraySize = 1;
     vbDesc.MipLevels = 1;
@@ -54,22 +47,77 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
     }
 
     // 頂点データのマップ
-    XMFLOAT3* vertMap = nullptr;
+    VertexData12* vertMap = nullptr;
     sts = m_pVertexBuffer->Map(0, nullptr, (void**)&vertMap);
     if (FAILED(sts))
     {
         return -1;
     }
-    std::copy(std::begin(vertices), std::end(vertices), vertMap);
-    //std::copy(p_VData, p_VData + vNum, vertMap);
+
+    // ポインタで渡すとイテレータを取得できないのでコピーを取ってバッファにコピー
+    // 回りくどい方法をしてるので改善の余地アリ
+    std::vector<VertexData12> vData;
+    for (int i = 0; i < vNum; i++)
+    {
+        vData.emplace_back();
+        vData[i] = p_VData[i];
+    }
+
+    std::copy(vData.begin(), vData.end(), vertMap);
     m_pVertexBuffer->Unmap(0, nullptr);
 
     // バーテックスバッファービューの作成
     m_vertexBufferView.BufferLocation = m_pVertexBuffer.Get()->GetGPUVirtualAddress();
-    m_vertexBufferView.SizeInBytes = sizeof(vertices);   // 総バイト数
-    //m_vertexBufferView.SizeInBytes = sizeof(VertexData12) * vNum;   // 総バイト数
-    m_vertexBufferView.StrideInBytes = sizeof(vertices[0]);    // 1頂点当たりのサイズ
-    //m_vertexBufferView.StrideInBytes = sizeof(VertexData12);    // 1頂点当たりのサイズ
+    m_vertexBufferView.SizeInBytes = sizeof(VertexData12) * vNum;   // 総バイト数
+    m_vertexBufferView.StrideInBytes = sizeof(VertexData12);    // 1頂点当たりのサイズ
+
+
+    // インデックスバッファの作成
+    D3D12_RESOURCE_DESC idxDesc = {};
+    idxDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    idxDesc.Width = sizeof(p_indexData) * indexNum;
+    idxDesc.Height = 1;
+    idxDesc.DepthOrArraySize = 1;
+    idxDesc.MipLevels = 1;
+    idxDesc.Format = DXGI_FORMAT_UNKNOWN;
+    idxDesc.SampleDesc.Count = 1;
+    idxDesc.SampleDesc.Quality = 0;
+    idxDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+    idxDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    sts = D3D12Graphics::GetInstance().getDevPtr()->CreateCommittedResource(
+        &heapprop,
+        D3D12_HEAP_FLAG_NONE,
+        &idxDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&m_pIndexBuffer));
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+
+    // インデックスバッファにコピー
+    unsigned short* mappedIdx = nullptr;
+    sts = m_pIndexBuffer->Map(0, nullptr, (void**)&mappedIdx);
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+    // 頂点データのコピーと同じくコピーをとってからコピー
+    std::vector<WORD> idxData;
+    for (int i = 0; i < indexNum; i++)
+    {
+        idxData.emplace_back();
+        idxData[i] = p_indexData[i];
+    }
+    std::copy(idxData.begin(), idxData.end(), mappedIdx);
+    m_pIndexBuffer->Unmap(0, nullptr);
+
+    m_indexBufferView.BufferLocation = m_pIndexBuffer.Get()->GetGPUVirtualAddress();
+    m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
+    m_indexBufferView.SizeInBytes = sizeof(WORD) * indexNum;
+
+    m_indexNum = indexNum;
 
     // シェーダーの読み込み
     ComPtr<ID3DBlob> vsBlob = nullptr;
@@ -103,6 +151,8 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
     // インプットレイアウトの作成
     D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
     };
 
     // ルートシグネチャの作成
@@ -183,5 +233,7 @@ void D3D12ObjData::ObjDraw()
     D3D12Graphics::GetInstance().getCmdPtr()->SetGraphicsRootSignature(m_pRootSignature.Get());
     D3D12Graphics::GetInstance().getCmdPtr()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     D3D12Graphics::GetInstance().getCmdPtr()->IASetVertexBuffers(0, 1, &m_vertexBufferView);
-    D3D12Graphics::GetInstance().getCmdPtr()->DrawInstanced(3, 1, 0, 0);
+    D3D12Graphics::GetInstance().getCmdPtr()->IASetIndexBuffer(&m_indexBufferView);
+    //D3D12Graphics::GetInstance().getCmdPtr()->DrawInstanced(3, 1, 0, 0);
+    D3D12Graphics::GetInstance().getCmdPtr()->DrawIndexedInstanced(m_indexNum, 1, 0, 0, 0);
 }

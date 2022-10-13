@@ -10,8 +10,8 @@ using namespace DirectX;
 struct VertexData12
 {
     XMFLOAT3 pos;
-    //XMFLOAT2 uv;
-    //XMFLOAT4 col;
+    XMFLOAT2 uv;
+    XMFLOAT4 col;
 };
 
 class D3D12ObjData
@@ -49,11 +49,24 @@ protected:
 private:
     //---------------------------------------------------------------------------
     ComPtr<ID3D12Resource>  m_pVertexBuffer;
-    D3D12_VERTEX_BUFFER_VIEW    m_vertexBufferView;
+    D3D12_VERTEX_BUFFER_VIEW    m_vertexBufferView = {};
+    ComPtr<ID3D12Resource>  m_pIndexBuffer;
+    D3D12_INDEX_BUFFER_VIEW m_indexBufferView = {};
+    int m_indexNum = 0;
+
     ComPtr<ID3D12PipelineState> m_pPipelineState;
     ComPtr<ID3D12RootSignature> m_pRootSignature;
+
     //---------------------------------------------------------------------------
     /// <summary>
+    /// m_pVertexBuffer     頂点バッファ
+    /// m_vertexBufferView  頂点バッファのビュー
+    /// m_pIndexBuffer      インデックスバッファ
+    /// m_indexBufferView   インデックスバッファのビュー
+    /// m_indexNum          インデックス数
+    /// 
+    /// m_pPipelineState    グラフィックスパイプライン
+    /// m_pRootSignature    ルートシグネチャ
     /// </summary>
 };
 

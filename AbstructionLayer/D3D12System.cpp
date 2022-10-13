@@ -7,18 +7,21 @@
 #include "D3D12System.h"
 #include "D3D12Graphics.h"
 #include "D3D12ObjData.h"
+#include "D3D12Camera.h"
 
 D3D12ObjData g_testObj;
 
 int D3D12Init()
 {
     VertexData12 vertData[] = {
-        {{-1.0f,-1.0f, 0.0f}},
-        {{-1.0f, 1.0f, 0.0f}},
-        {{ 1.0f,-1.0f, 0.0f}},
+        {{-0.5f,-0.5f, 0.0f},{1.0f,0.0f},{1.0f,0.0f,1.0f,1.0f}},
+        {{-0.5f, 0.5f, 0.0f},{1.0f,0.0f},{0.0f,1.0f,1.0f,1.0f}},
+        {{ 0.5f,-0.5f, 0.0f},{1.0f,0.0f},{1.0f,1.0f,0.0f,1.0f}},
+        {{ 0.5f, 0.5f, 0.0f},{1.0f,0.0f},{1.0f,1.0f,1.0f,1.0f}},
     };
     WORD index[] = {
         0,1,2,
+        2,1,3,
     };
     g_testObj.ObjInit(
         vertData, sizeof(vertData) / sizeof(VertexData12),

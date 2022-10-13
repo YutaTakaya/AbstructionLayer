@@ -138,7 +138,7 @@ int D3D12Graphics::D3D12Init(const HWND hWnd, const int width, const int height)
 
     // RTVヒープのスワップチェインとの関連付け
     D3D12_CPU_DESCRIPTOR_HANDLE handle = m_pRtvHeaps->GetCPUDescriptorHandleForHeapStart();
-    for (int i = 0; i < scDesc.BufferCount; i++)
+    for (unsigned int i = 0; i < scDesc.BufferCount; i++)
     {
         m_pBackBuffers.emplace_back();
         sts = m_pSwapChain->GetBuffer(i, IID_PPV_ARGS(&m_pBackBuffers[i]));
@@ -162,8 +162,8 @@ int D3D12Graphics::D3D12Init(const HWND hWnd, const int width, const int height)
     }
 
     // ビューポートの作成
-    m_pViewport.Width = width;     // 出力先の幅
-    m_pViewport.Height = height;   // 出力先の高さ
+    m_pViewport.Width = (float)width;     // 出力先の幅
+    m_pViewport.Height = (float)height;   // 出力先の高さ
     m_pViewport.TopLeftX = 0;      // 出力先の左上X座標
     m_pViewport.TopLeftY = 0;      // 出力先の左上Y座標
     m_pViewport.MaxDepth = 1.0f;   // 深度最大値
@@ -198,7 +198,7 @@ int D3D12Graphics::D3D12BeforeRender()
     auto rtvH = m_pRtvHeaps->GetCPUDescriptorHandleForHeapStart();
     rtvH.ptr += bbIdx * m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-    float col[4] = { 1,1,0,1 };
+    float col[4] = { 0.3f,0.3f,0.3f,1 };
     m_pCommandList->ClearRenderTargetView(rtvH, col, 0, nullptr);
     m_pCommandList->RSSetViewports(1, &m_pViewport);
     m_pCommandList->RSSetScissorRects(1, &m_pScissorRect);

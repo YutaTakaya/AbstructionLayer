@@ -66,6 +66,9 @@
     <ClInclude Include="D3D12ObjData.h">
       <Filter>D3D12\hedder</Filter>
     </ClInclude>
+    <ClInclude Include="D3D12Camera.h">
+      <Filter>D3D12\hedder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -90,6 +93,9 @@
       <Filter>D3D12\source</Filter>
     </ClCompile>
     <ClCompile Include="D3D12ObjData.cpp">
+      <Filter>D3D12\source</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D12Camera.cpp">
       <Filter>D3D12\source</Filter>
     </ClCompile>
   </ItemGroup>
