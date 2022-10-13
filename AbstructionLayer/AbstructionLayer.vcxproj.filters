@@ -63,6 +63,9 @@
     <ClInclude Include="D3D12System.h">
       <Filter>D3D12\hedder</Filter>
     </ClInclude>
+    <ClInclude Include="D3D12ObjData.h">
+      <Filter>D3D12\hedder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -86,6 +89,9 @@
     <ClCompile Include="D3D12System.cpp">
       <Filter>D3D12\source</Filter>
     </ClCompile>
+    <ClCompile Include="D3D12ObjData.cpp">
+      <Filter>D3D12\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AbstructionLayer.rc">
@@ -102,5 +108,6 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="D3D11Shader.hlsl" />
+    <FxCompile Include="D3D12Shader.hlsl" />
   </ItemGroup>
 </Project>

@@ -88,8 +88,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #ifdef D3D12
         D3D12Update();
         D3D12Render();
-        // バックバッファを表示
-        D3D12Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);
+
 #endif // D3D12
     }
 

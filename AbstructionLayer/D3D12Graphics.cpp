@@ -1,3 +1,8 @@
+//==============================================================================
+// Filename: D3D12Graphics.h
+// Description: DirectX12の描画システム
+// Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
+//==============================================================================
 #include "D3D12Graphics.h"
 
 int D3D12Graphics::D3D12Init(const HWND hWnd, const int width, const int height)
@@ -156,6 +161,85 @@ int D3D12Graphics::D3D12Init(const HWND hWnd, const int width, const int height)
         return -1;
     }
 
+    // ビューポートの作成
+    m_pViewport.Width = width;     // 出力先の幅
+    m_pViewport.Height = height;   // 出力先の高さ
+    m_pViewport.TopLeftX = 0;      // 出力先の左上X座標
+    m_pViewport.TopLeftY = 0;      // 出力先の左上Y座標
+    m_pViewport.MaxDepth = 1.0f;   // 深度最大値
+    m_pViewport.MinDepth = 0.0f;   // 深度最小値
+
+    // シザー矩形の作成
+    m_pScissorRect.top = 0;    // 切り抜き上座標
+    m_pScissorRect.left = 0;   // 切り抜き左座標
+    m_pScissorRect.right = m_pScissorRect.left + width;
+    m_pScissorRect.bottom = m_pScissorRect.top + height;
+
+    // 初期化処理
+    m_pCommandAllocator->Reset();
+    m_pCommandList->Reset(m_pCommandAllocator.Get(), nullptr);
+    return 0;
+}
+
+int D3D12Graphics::D3D12BeforeRender()
+{
+    // 描画先のバックバッファの番号を取得する
+    auto bbIdx = m_pSwapChain->GetCurrentBackBufferIndex();
+    // バリアの設定
+    D3D12_RESOURCE_BARRIER brDesc = {};
+    brDesc.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    brDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    brDesc.Transition.pResource = m_pBackBuffers[bbIdx];
+    brDesc.Transition.Subresource = 0;
+    brDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+    brDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    m_pCommandList->ResourceBarrier(1, &brDesc);    // バリア実行
+    // RTVのポインタ取得
+    auto rtvH = m_pRtvHeaps->GetCPUDescriptorHandleForHeapStart();
+    rtvH.ptr += bbIdx * m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+    float col[4] = { 1,1,0,1 };
+    m_pCommandList->ClearRenderTargetView(rtvH, col, 0, nullptr);
+    m_pCommandList->RSSetViewports(1, &m_pViewport);
+    m_pCommandList->RSSetScissorRects(1, &m_pScissorRect);
+    m_pCommandList->OMSetRenderTargets(1, &rtvH, false, nullptr);
+    return 0;
+}
+
+int D3D12Graphics::D3D12AfterRender()
+{
+    // 描画先のバックバッファの番号を取得する
+    auto bbIdx = m_pSwapChain->GetCurrentBackBufferIndex();
+    // バリアの設定
+    D3D12_RESOURCE_BARRIER brDesc = {};
+    brDesc.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    brDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    brDesc.Transition.pResource = m_pBackBuffers[bbIdx];
+    brDesc.Transition.Subresource = 0;
+    brDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    brDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+    m_pCommandList->ResourceBarrier(1, &brDesc);    // バリア実行
+
+    m_pCommandList->Close();
+    // コマンドリストの実行
+    ID3D12CommandList* cmdLists[] = { m_pCommandList.Get() };
+    m_pCommandQueue->ExecuteCommandLists(1, cmdLists);
+
+    // 待ち処理
+    UINT64 fenceVal = 0;
+    if (m_pFence->GetCompletedValue() < fenceVal) {
+        auto event = CreateEvent(nullptr, false, false, nullptr);
+        m_pFence->SetEventOnCompletion(fenceVal, event);
+        WaitForSingleObject(event, INFINITE);
+        CloseHandle(event);
+    }
+
+    // 初期化処理
+    m_pCommandAllocator->Reset();
+    m_pCommandList->Reset(m_pCommandAllocator.Get(), nullptr);
+
+    // バックバッファを表示
+    m_pSwapChain->Present(1, 0);
     return 0;
 }
 

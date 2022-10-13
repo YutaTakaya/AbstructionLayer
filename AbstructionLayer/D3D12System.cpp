@@ -1,8 +1,29 @@
+//==============================================================================
+// Filename: D3D12System.cpp
+// Description: DirectX12の基本処理
+// Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
+//==============================================================================
+
 #include "D3D12System.h"
 #include "D3D12Graphics.h"
+#include "D3D12ObjData.h"
+
+D3D12ObjData g_testObj;
 
 int D3D12Init()
 {
+    VertexData12 vertData[] = {
+        {{-1.0f,-1.0f, 0.0f}},
+        {{-1.0f, 1.0f, 0.0f}},
+        {{ 1.0f,-1.0f, 0.0f}},
+    };
+    WORD index[] = {
+        0,1,2,
+    };
+    g_testObj.ObjInit(
+        vertData, sizeof(vertData) / sizeof(VertexData12),
+        index, sizeof(index) / sizeof(WORD));
+
     return 0;
 }
 
@@ -10,42 +31,15 @@ void D3D12Update()
 {
 }
 
-// TODO : BeforeRenderとAfterRenderに分割してまとめる
 void D3D12Render()
 {
-    // 描画先のバックバッファの番号を取得する
-    auto bbIdx = D3D12Graphics::GetInstance().getSwapChainPtr()->GetCurrentBackBufferIndex();
-    // RTVのポインタ取得
-    auto rtvH = D3D12Graphics::GetInstance().getRTVHeapPtr()->GetCPUDescriptorHandleForHeapStart();
-    rtvH.ptr += bbIdx * D3D12Graphics::GetInstance().getDevPtr()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-    float col[4] = { 1,1,0,1 };
-    D3D12Graphics::GetInstance().getCmdPtr()->ClearRenderTargetView(rtvH, col, 0, nullptr);
-
+    D3D12Graphics::GetInstance().D3D12BeforeRender();
     //   ここから処理を書く   //
 
-
+    g_testObj.ObjDraw();
 
     //  ここまでに処理を書く  //
-
-    D3D12Graphics::GetInstance().getCmdPtr()->Close();
-
-    // コマンドリストの実行
-    ID3D12CommandList* cmdLists[] = { D3D12Graphics::GetInstance().getCmdPtr() };
-    D3D12Graphics::GetInstance().getQueuePtr()->ExecuteCommandLists(1, cmdLists);
-
-    // 待ち処理
-    UINT64 fenceVal = 0;
-    if (D3D12Graphics::GetInstance().getFencePtr()->GetCompletedValue() < fenceVal) {
-        auto event = CreateEvent(nullptr, false, false, nullptr);
-        D3D12Graphics::GetInstance().getFencePtr()->SetEventOnCompletion(fenceVal, event);
-        WaitForSingleObject(event, INFINITE);
-        CloseHandle(event);
-    }
-
-    // 初期化処理
-    D3D12Graphics::GetInstance().getAllocatorPtr()->Reset();
-    D3D12Graphics::GetInstance().getCmdPtr()->Reset(D3D12Graphics::GetInstance().getAllocatorPtr(), nullptr);
+    D3D12Graphics::GetInstance().D3D12AfterRender();
 }
 
 void D3D12Uninit()

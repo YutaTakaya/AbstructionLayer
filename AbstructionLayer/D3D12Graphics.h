@@ -15,6 +15,7 @@
 #include <d3dcompiler.h>
 #include <wrl/client.h>
 #include <vector>
+#include <memory>
 
 using Microsoft::WRL::ComPtr;
 
@@ -35,6 +36,20 @@ public:
 		/*[in]*/	const HWND hWnd,
 		/*[in]*/	const int width,
 		/*[in]*/	const int height);
+
+    //---------------------------------------------
+    /// DirectX12の描画事前処理
+    ///
+    /// \return エラーの場合-1、正常に終了した場合0が返される
+    //--------------------------------------------- 
+    int D3D12BeforeRender();
+
+    //---------------------------------------------
+    /// DirectX12の描画事後処理
+    ///
+    /// \return エラーの場合-1、正常に終了した場合0が返される
+    //--------------------------------------------- 
+    int D3D12AfterRender();
 
 	//---------------------------------------------
 	/// インスタンスの作成
@@ -141,9 +156,29 @@ private:
     std::vector<ID3D12Resource*> m_pBackBuffers;
     ComPtr<ID3D12CommandAllocator>  m_pCommandAllocator;
     ComPtr<ID3D12Fence> m_pFence;
+    D3D12_VIEWPORT m_pViewport; // TODO : ユニークポインタ化
+    D3D12_RECT m_pScissorRect; // TODO : ユニークポインタ化
 
 	static inline D3D12Graphics* s_pInstance;
 	//---------------------------------------------------------------------------
 	/// <summary>
+	/// m_pDevice   D3D12デバイス
+	/// m_pSwapChain    スワップチェイン
+	/// m_pCommandList  コマンドリスト
+	/// m_pCommandQueue コマンドキュー
+	/// m_pRtvHeaps     レンダーターゲットビュー用ヒープ
+	/// m_pBackBuffer   バックバッファ配列（フロントとバックの2つ）
+	/// m_pCommandAllocator コマンドアロケーター
+	/// 
+	/// s_pInstance インスタンス
 	/// </summary>
+
+    //---------------------------------------------------------------------------
+    //---------------------------------------------
+    /// コンストラクタ
+    /// 
+    /// シングルトンのためprivateにして呼び出せなくする
+    //--------------------------------------------- 
+    D3D12Graphics() {}
+    //---------------------------------------------------------------------------
 };
