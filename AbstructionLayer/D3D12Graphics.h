@@ -159,6 +159,9 @@ private:
     D3D12_VIEWPORT m_pViewport = {}; // TODO : ユニークポインタ化
     D3D12_RECT m_pScissorRect = {}; // TODO : ユニークポインタ化
 
+    ComPtr<ID3D12Resource>  m_pDepthBuffer;
+    ComPtr<ID3D12DescriptorHeap> m_pDepthStencilViewHeap;
+
 	static inline D3D12Graphics* s_pInstance;
 	//---------------------------------------------------------------------------
 	/// <summary>

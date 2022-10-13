@@ -4,6 +4,13 @@
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 
+cbuffer ConstantBuffer : register(b0)
+{
+    float4x4 World; //ワールド変換行列
+    float4x4 View; //ビュー変換行列
+    float4x4 Projection; //透視射影変換行列
+}
+
 struct VSOutput
 {
     float4 Pos : SV_POSITION; // 頂点座標（射影座標系）
@@ -14,7 +21,10 @@ struct VSOutput
 VSOutput VSmain(float4 pos : POSITION, float2 uv : TEXCOORD, float4 col : COLOR)
 {
     VSOutput output;
-    output.Pos = pos;
+    //output.Pos = pos;
+    output.Pos = mul(pos, World);
+    output.Pos = mul(output.Pos, View);
+    output.Pos = mul(output.Pos, Projection);
     output.Tex = uv;
     output.Col = col;
 	return output;

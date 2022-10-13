@@ -155,10 +155,25 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
         {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT,0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
     };
 
+    // テクスチャと定数バッファの指定
+    D3D12_DESCRIPTOR_RANGE descTblRange = {};
+    descTblRange.NumDescriptors = 1;
+    descTblRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;   // 定数バッファ
+    descTblRange.BaseShaderRegister = 0;    // b0番スロット
+    descTblRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+    D3D12_ROOT_PARAMETER rootParam = {};
+    rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+    rootParam.DescriptorTable.pDescriptorRanges = &descTblRange;
+    rootParam.DescriptorTable.NumDescriptorRanges = 1;  // ディスクリプタレンジ数（定数は1つ）
+    rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
     // ルートシグネチャの作成
     D3D12_ROOT_SIGNATURE_DESC rsDesc = {};
     rsDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;    // 頂点情報のみ引き渡し
-    
+    rsDesc.pParameters = &rootParam;    // ルートパラメーターの先頭アドレス
+    rsDesc.NumParameters = 1;   // ルートパラメーターの数
+
     ComPtr<ID3DBlob> rootsigBlob = nullptr;
     sts = D3D12SerializeRootSignature(
         &rsDesc,
@@ -218,13 +233,50 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
     gpDesc.SampleDesc.Count = 1;    // サンプリングは1ピクセルにつき1
     gpDesc.SampleDesc.Quality = 0;  // サンプリングクォリティ
 
+    gpDesc.DepthStencilState.DepthEnable = true;    // 深度バッファーの有効化
+    gpDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;   // 深度値を書き込む
+    gpDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;    // 小さい方を使用
+    gpDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
     sts = D3D12Graphics::GetInstance().getDevPtr()->CreateGraphicsPipelineState(
         &gpDesc, IID_PPV_ARGS(&m_pPipelineState));
     if (FAILED(sts))
     {
         return -1;
     }
+
+    // 定数バッファビューの作成
+    D3D12_DESCRIPTOR_HEAP_DESC dhDesc = {};
+    dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    dhDesc.NodeMask = 0;
+    dhDesc.NumDescriptors = 1;  // CBVのみ
+    dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    sts = D3D12Graphics::GetInstance().getDevPtr()->CreateDescriptorHeap(
+        &dhDesc,
+        IID_PPV_ARGS(&m_pDescHeap));
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+
+    auto descHeapHandle = m_pDescHeap.Get()->GetCPUDescriptorHandleForHeapStart();
+    //descHeapHandle.ptr += D3D12Graphics::GetInstance().getDevPtr()->
+    //    GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV); // テクスチャ実装時に外す
+    D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+    cbvDesc.BufferLocation = D3D12Camera::GetInstance().getConstBufferPtr()->GetGPUVirtualAddress();
+    cbvDesc.SizeInBytes = (UINT)D3D12Camera::GetInstance().getConstBufferPtr()->GetDesc().Width;
+
+    D3D12Graphics::GetInstance().getDevPtr()->CreateConstantBufferView(&cbvDesc, descHeapHandle);
+    
+    m_localMtx = XMMatrixIdentity();
     return 0;
+}
+
+void D3D12ObjData::ObjUpdate()
+{
+    m_localMtx = XMMatrixMultiply(m_localMtx, XMMatrixRotationX(1.0f));
+    m_localMtx = XMMatrixMultiply(m_localMtx, XMMatrixRotationY(1.0f));
+    D3D12Camera::GetInstance().CameraUpdateConstBuff(m_localMtx);
 }
 
 void D3D12ObjData::ObjDraw()
@@ -234,6 +286,9 @@ void D3D12ObjData::ObjDraw()
     D3D12Graphics::GetInstance().getCmdPtr()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     D3D12Graphics::GetInstance().getCmdPtr()->IASetVertexBuffers(0, 1, &m_vertexBufferView);
     D3D12Graphics::GetInstance().getCmdPtr()->IASetIndexBuffer(&m_indexBufferView);
+
+    D3D12Graphics::GetInstance().getCmdPtr()->SetDescriptorHeaps(1, m_pDescHeap.GetAddressOf());
+    D3D12Graphics::GetInstance().getCmdPtr()->SetGraphicsRootDescriptorTable(0, m_pDescHeap.Get()->GetGPUDescriptorHandleForHeapStart());
     //D3D12Graphics::GetInstance().getCmdPtr()->DrawInstanced(3, 1, 0, 0);
     D3D12Graphics::GetInstance().getCmdPtr()->DrawIndexedInstanced(m_indexNum, 1, 0, 0, 0);
 }

@@ -175,6 +175,58 @@ int D3D12Graphics::D3D12Init(const HWND hWnd, const int width, const int height)
     m_pScissorRect.right = m_pScissorRect.left + width;
     m_pScissorRect.bottom = m_pScissorRect.top + height;
 
+    // 深度バッファの作成
+    D3D12_RESOURCE_DESC drDesc = {};
+    drDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    drDesc.Width = width;
+    drDesc.Height = height;
+    drDesc.DepthOrArraySize = 1;
+    drDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    drDesc.SampleDesc.Count = 1;
+    drDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+    D3D12_HEAP_PROPERTIES depthHeapProp = {};
+    depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+    depthHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    depthHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+
+    D3D12_CLEAR_VALUE depthClearValue = {};
+    depthClearValue.DepthStencil.Depth = 1.0f;   //深さ1.0f(最大値)でクリア
+    depthClearValue.Format = DXGI_FORMAT_D32_FLOAT; // 32ビットfloat値としてクリア
+
+    sts = m_pDevice.Get()->CreateCommittedResource(
+        &depthHeapProp,
+        D3D12_HEAP_FLAG_NONE,
+        &drDesc,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        &depthClearValue,
+        IID_PPV_ARGS(&m_pDepthBuffer));
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+
+    D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+    dsvHeapDesc.NumDescriptors = 1;
+    dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    sts = m_pDevice.Get()->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&m_pDepthStencilViewHeap));
+    if (FAILED(sts))
+    {
+        return -1;
+    }
+
+    // 深度ビュー作成
+    D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+    dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+    dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+
+    m_pDevice.Get()->CreateDepthStencilView(
+        m_pDepthBuffer.Get(),
+        &dsvDesc,
+        m_pDepthStencilViewHeap.Get()->GetCPUDescriptorHandleForHeapStart());
+
+
     // 初期化処理
     m_pCommandAllocator->Reset();
     m_pCommandList->Reset(m_pCommandAllocator.Get(), nullptr);
@@ -197,12 +249,15 @@ int D3D12Graphics::D3D12BeforeRender()
     // RTVのポインタ取得
     auto rtvH = m_pRtvHeaps->GetCPUDescriptorHandleForHeapStart();
     rtvH.ptr += bbIdx * m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    
+    auto dsvH = m_pDepthStencilViewHeap.Get()->GetCPUDescriptorHandleForHeapStart();
 
     float col[4] = { 0.3f,0.3f,0.3f,1 };
     m_pCommandList->ClearRenderTargetView(rtvH, col, 0, nullptr);
+    m_pCommandList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
     m_pCommandList->RSSetViewports(1, &m_pViewport);
     m_pCommandList->RSSetScissorRects(1, &m_pScissorRect);
-    m_pCommandList->OMSetRenderTargets(1, &rtvH, false, nullptr);
+    m_pCommandList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
     return 0;
 }
 

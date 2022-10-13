@@ -6,6 +6,7 @@
 //==============================================================================
 #pragma once
 #include "D3D12Graphics.h"
+#include "D3D12Camera.h"
 using namespace DirectX;
 struct VertexData12
 {
@@ -36,6 +37,11 @@ public:
         /*[in]*/    const int indexNum);
     
     //---------------------------------------------
+    /// 更新処理
+    //--------------------------------------------- 
+    void ObjUpdate();
+
+    //---------------------------------------------
     /// 頂点情報を用いたDirectX12での描画処理
     ///
     /// \return void
@@ -54,9 +60,12 @@ private:
     D3D12_INDEX_BUFFER_VIEW m_indexBufferView = {};
     int m_indexNum = 0;
 
+    ComPtr<ID3D12DescriptorHeap> m_pDescHeap;
+
     ComPtr<ID3D12PipelineState> m_pPipelineState;
     ComPtr<ID3D12RootSignature> m_pRootSignature;
 
+    XMMATRIX m_localMtx;
     //---------------------------------------------------------------------------
     /// <summary>
     /// m_pVertexBuffer     頂点バッファ
