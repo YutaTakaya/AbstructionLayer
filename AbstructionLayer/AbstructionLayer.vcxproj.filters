@@ -31,6 +31,9 @@
     <Filter Include="D3D12\hedder">
       <UniqueIdentifier>{a856d832-c00b-4df6-b6fa-5aedc664eb22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\shader">
+      <UniqueIdentifier>{fe939b78-19fc-4cb4-9539-4f97e746d048}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -113,7 +116,11 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="D3D11Shader.hlsl" />
-    <FxCompile Include="D3D12Shader.hlsl" />
+    <FxCompile Include="D3D11Shader.hlsl">
+      <Filter>リソース ファイル\shader</Filter>
+    </FxCompile>
+    <FxCompile Include="D3D12Shader.hlsl">
+      <Filter>リソース ファイル\shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

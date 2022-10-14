@@ -15,6 +15,11 @@ struct VertexData12
     XMFLOAT4 col;
 };
 
+struct TexRGBA
+{
+    unsigned char R, G, B, A;
+};
+
 class D3D12ObjData
 {
 public:
@@ -48,6 +53,34 @@ public:
     //--------------------------------------------- 
     void ObjDraw();
 
+    //---------------------------------------------
+    /// ワールド変換行列の回転角を変更する
+    /// 
+    /// \param[in] (angleX)     度数法でのX軸回転度数
+    /// \param[in] (angleY)     度数法でのY軸回転度数
+    /// \param[in] (angleZ)     度数法でのZ軸回転度数
+    ///
+    /// \return void
+    //--------------------------------------------- 
+    void ObjRotate(
+        /*[in]*/    const float angleX,
+        /*[in]*/    const float angleY,
+        /*[in]*/    const float angleZ);
+
+    //---------------------------------------------
+    /// ワールド変換行列の座標を変更する
+    /// 
+    /// \param[in] (posX)     X座標
+    /// \param[in] (posY)     Y座標
+    /// \param[in] (posZ)     Z座標
+    ///
+    /// \return void
+    //--------------------------------------------- 
+    void ObjTranslate(
+        /*[in]*/    const float posX,
+        /*[in]*/    const float posY,
+        /*[in]*/    const float posZ);
+
     //---------------------------------------------------------------------------
 
 protected:
@@ -61,11 +94,13 @@ private:
     int m_indexNum = 0;
 
     ComPtr<ID3D12DescriptorHeap> m_pDescHeap;
+    ComPtr<ID3D12Resource>  m_pTextureBuffer;
 
     ComPtr<ID3D12PipelineState> m_pPipelineState;
     ComPtr<ID3D12RootSignature> m_pRootSignature;
 
     XMMATRIX m_localMtx;
+    XMFLOAT3 m_worldPos;
     //---------------------------------------------------------------------------
     /// <summary>
     /// m_pVertexBuffer     頂点バッファ
@@ -74,8 +109,14 @@ private:
     /// m_indexBufferView   インデックスバッファのビュー
     /// m_indexNum          インデックス数
     /// 
+    /// m_pDescHeap         デスクリプタヒープ
+    /// m_pTextureBuffer    テクスチャバッファ
+    /// 
     /// m_pPipelineState    グラフィックスパイプライン
     /// m_pRootSignature    ルートシグネチャ
+    /// 
+    /// m_localMtx          ローカルでの姿勢情報
+    /// m_localPos          ローカル座標
     /// </summary>
 };
 
