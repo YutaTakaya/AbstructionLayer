@@ -156,17 +156,17 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
         {
             if ((((x / 32) + (y / 32)) % 2 == 1))
             {
-                textureData[x + y * 256].R = 0;
-                textureData[x + y * 256].G = 0;
-                textureData[x + y * 256].B = 0;
-                textureData[x + y * 256].A = 255;
+                textureData[x + (y * 256)].R = 0;
+                textureData[x + (y * 256)].G = 0;
+                textureData[x + (y * 256)].B = 0;
+                textureData[x + (y * 256)].A = 255;
             }
             else
             {
-                textureData[x + y * 256].R = 255;
-                textureData[x + y * 256].G = 255;
-                textureData[x + y * 256].B = 255;
-                textureData[x + y * 256].A = 255;
+                textureData[x + (y * 256)].R = 255;
+                textureData[x + (y * 256)].G = 255;
+                textureData[x + (y * 256)].B = 255;
+                textureData[x + (y * 256)].A = 255;
             }
         }
     }
@@ -215,7 +215,7 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
         nullptr,
         textureData.data(),
         sizeof(TexRGBA) * 256,
-        sizeof(TexRGBA) * textureData.size());
+        sizeof(TexRGBA) * (UINT)textureData.size());
     if (FAILED(sts))
     {
         return -1;

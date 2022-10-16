@@ -156,9 +156,9 @@ private:
     std::vector<ID3D12Resource*> m_pBackBuffers;
     ComPtr<ID3D12CommandAllocator>  m_pCommandAllocator;
     ComPtr<ID3D12Fence> m_pFence;
+    UINT64 m_fenceVal = 0;
     D3D12_VIEWPORT m_pViewport = {}; // TODO : ユニークポインタ化
     D3D12_RECT m_pScissorRect = {}; // TODO : ユニークポインタ化
-
     ComPtr<ID3D12Resource>  m_pDepthBuffer;
     ComPtr<ID3D12DescriptorHeap> m_pDepthStencilViewHeap;
 
@@ -172,6 +172,13 @@ private:
 	/// m_pRtvHeaps     レンダーターゲットビュー用ヒープ
 	/// m_pBackBuffer   バックバッファ配列（フロントとバックの2つ）
 	/// m_pCommandAllocator コマンドアロケーター
+	/// m_pFence        フェンス
+	/// m_fenceVal      フェンス値
+	/// m_pViewport     ビューポート
+	/// m_pScissorRect  シザー矩形
+	/// 
+	/// m_pDepthBuffer  深度バッファ
+	/// m_pDepthStencilViewHeap 深度ステンシルビュー用ヒープ
 	/// 
 	/// s_pInstance インスタンス
 	/// </summary>

@@ -79,14 +79,6 @@ int D3D12Init()
          21,23,22,
     };
 
-    //VertexData12 vertData[] = {
-    //    {{-1,-1,0},{1,1},{1,1,1,1}},
-    //    {{-1,1,0},{1,1},{1,1,1,1}},
-    //    {{1,-1,0},{1,1},{1,1,1,1}},
-    //};
-    //WORD index[] = {
-    //    0,1,2
-    //};
     g_testObj.ObjInit(
         vertData, sizeof(vertData) / sizeof(VertexData12),
         index, sizeof(index) / sizeof(WORD));
@@ -98,7 +90,7 @@ int D3D12Init()
 void D3D12Update()
 {
     g_testObj.ObjUpdate();
-    g_testObj.ObjRotate(20.0f, 45.0f, 0.02f);
+    g_testObj.ObjRotate(0.001f, 0.002f, 0.003f);
 }
 
 void D3D12Render()

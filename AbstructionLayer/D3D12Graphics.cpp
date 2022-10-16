@@ -154,8 +154,7 @@ int D3D12Graphics::D3D12Init(const HWND hWnd, const int width, const int height)
     }
 
     // フェンスの作成
-    UINT64 fenceVal = 0;
-    sts = m_pDevice->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_pFence));
+    sts = m_pDevice->CreateFence(m_fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_pFence));
     if (FAILED(sts))
     {
         return -1;
@@ -248,7 +247,7 @@ int D3D12Graphics::D3D12BeforeRender()
     m_pCommandList->ResourceBarrier(1, &brDesc);    // バリア実行
     // RTVのポインタ取得
     auto rtvH = m_pRtvHeaps->GetCPUDescriptorHandleForHeapStart();
-    rtvH.ptr += bbIdx * m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    rtvH.ptr += static_cast<__int64>(bbIdx) * m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     
     auto dsvH = m_pDepthStencilViewHeap.Get()->GetCPUDescriptorHandleForHeapStart();
 
@@ -281,12 +280,15 @@ int D3D12Graphics::D3D12AfterRender()
     m_pCommandQueue->ExecuteCommandLists(1, cmdLists);
 
     // 待ち処理
-    UINT64 fenceVal = 0;
-    if (m_pFence->GetCompletedValue() < fenceVal) {
+    m_pCommandQueue->Signal(m_pFence.Get(), ++m_fenceVal);
+    if (m_pFence->GetCompletedValue() < m_fenceVal) {
         auto event = CreateEvent(nullptr, false, false, nullptr);
-        m_pFence->SetEventOnCompletion(fenceVal, event);
-        WaitForSingleObject(event, INFINITE);
-        CloseHandle(event);
+        m_pFence->SetEventOnCompletion(m_fenceVal, event);
+        if (event != 0)
+        {
+            WaitForSingleObject(event, INFINITE);
+            CloseHandle(event);
+        }
     }
 
     // 初期化処理
