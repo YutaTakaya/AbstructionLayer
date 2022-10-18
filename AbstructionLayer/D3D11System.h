@@ -4,7 +4,7 @@
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 
-#include "ObjData.h"
+#include "D3D11ObjData.h"
 
 //---------------------------------------------
 /// オブジェクトデータの初期化処理

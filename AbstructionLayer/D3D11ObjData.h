@@ -1,5 +1,5 @@
 //==============================================================================
-// Filename: ObjData.h
+// Filename: D3D11ObjData.h
 // Description: ポリゴン情報及び描画システム
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
@@ -16,7 +16,7 @@ struct VertexData
     XMFLOAT4 col;
 };
 
-class ObjData
+class D3D11ObjData
 {
 public:
     //---------------------------------------------------------------------------

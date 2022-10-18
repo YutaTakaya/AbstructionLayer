@@ -1,12 +1,12 @@
 //==============================================================================
-// Filename: ObjData.cpp
+// Filename: D3D11ObjData.cpp
 // Description: ポリゴン情報及び描画システム
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 
-#include "ObjData.h"
+#include "D3D11ObjData.h"
 
-int ObjData::ObjInit(const VertexData* p_VData, const int vNum, const WORD* p_indexData, const int indexNum)
+int D3D11ObjData::ObjInit(const VertexData* p_VData, const int vNum, const WORD* p_indexData, const int indexNum)
 {
     HRESULT sts;
 
@@ -143,13 +143,13 @@ int ObjData::ObjInit(const VertexData* p_VData, const int vNum, const WORD* p_in
     return 0;
 }
 
-void ObjData::ObjUpdate()
+void D3D11ObjData::ObjUpdate()
 {
     // 毎フレームでの更新処理を書く
 }
 
 
-void ObjData::ObjDraw()
+void D3D11ObjData::ObjDraw()
 {
     // ワールド行列へ変換処理
     XMMATRIX worldMtx;
@@ -187,20 +187,20 @@ void ObjData::ObjDraw()
 }
 
 
-void ObjData::ObjUninit()
+void D3D11ObjData::ObjUninit()
 {
     m_vertex.clear();
     m_pVertexBuff->Release();
 }
 
-void ObjData::ObjRotate(const float angleX, const float angleY, const float angleZ)
+void D3D11ObjData::ObjRotate(const float angleX, const float angleY, const float angleZ)
 {
     m_localMtx = ::XMMatrixMultiply(m_localMtx, ::XMMatrixRotationX(angleX));
     m_localMtx = ::XMMatrixMultiply(m_localMtx, ::XMMatrixRotationY(angleY));
     m_localMtx = ::XMMatrixMultiply(m_localMtx, ::XMMatrixRotationZ(angleZ));
 }
 
-void ObjData::ObjTranslate(const float posX, const float posY, const float posZ)
+void D3D11ObjData::ObjTranslate(const float posX, const float posY, const float posZ)
 {
     m_worldPos.x = posX;
     m_worldPos.y = posY;

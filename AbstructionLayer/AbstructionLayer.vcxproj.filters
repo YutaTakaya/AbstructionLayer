@@ -34,6 +34,15 @@
     <Filter Include="リソース ファイル\shader">
       <UniqueIdentifier>{fe939b78-19fc-4cb4-9539-4f97e746d048}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{6f287055-50c5-4c7f-90b5-e02c0363196d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\source">
+      <UniqueIdentifier>{f4f9a812-2235-41d8-8141-5cf96b6716c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\hedder">
+      <UniqueIdentifier>{1e77d0f8-8e5c-43df-9fd9-3f987d54f315}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -57,7 +66,7 @@
     <ClInclude Include="D3D11System.h">
       <Filter>D3D11\hedder</Filter>
     </ClInclude>
-    <ClInclude Include="ObjData.h">
+    <ClInclude Include="D3D11ObjData.h">
       <Filter>D3D11\hedder</Filter>
     </ClInclude>
     <ClInclude Include="D3D12Graphics.h">
@@ -71,6 +80,18 @@
     </ClInclude>
     <ClInclude Include="D3D12Camera.h">
       <Filter>D3D12\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D12Render.h">
+      <Filter>D3D12\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonCamera.h">
+      <Filter>Common\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonObjData.h">
+      <Filter>Common\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonResourceManager.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -86,7 +107,7 @@
     <ClCompile Include="D3D11System.cpp">
       <Filter>D3D11\source</Filter>
     </ClCompile>
-    <ClCompile Include="ObjData.cpp">
+    <ClCompile Include="D3D11ObjData.cpp">
       <Filter>D3D11\source</Filter>
     </ClCompile>
     <ClCompile Include="D3D12Graphics.cpp">
@@ -100,6 +121,18 @@
     </ClCompile>
     <ClCompile Include="D3D12Camera.cpp">
       <Filter>D3D12\source</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D12Render.cpp">
+      <Filter>D3D12\source</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonCamera.cpp">
+      <Filter>Common\source</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonObjData.cpp">
+      <Filter>Common\source</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonResourceManager.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

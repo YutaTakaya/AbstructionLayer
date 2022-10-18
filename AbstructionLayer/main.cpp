@@ -87,7 +87,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 #ifdef D3D12
         D3D12Update();
-        D3D12Render();
+        D3D12Draw();
 #endif // D3D12
     }
 

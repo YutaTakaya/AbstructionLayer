@@ -8,8 +8,8 @@
 #include "D3D11Graphics.h"
 #include "D3D11Camera.h"
 
-ObjData g_testObj1;
-ObjData g_testObj2;
+D3D11ObjData g_testObj1;
+D3D11ObjData g_testObj2;
 
 int D3D11Init()
 {

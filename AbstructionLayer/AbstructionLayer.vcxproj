@@ -141,28 +141,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CommonCamera.h" />
+    <ClInclude Include="CommonObjData.h" />
+    <ClInclude Include="CommonResourceManager.h" />
     <ClInclude Include="D3D12Graphics.h" />
     <ClInclude Include="D3D12ObjData.h" />
+    <ClInclude Include="D3D12Render.h" />
     <ClInclude Include="D3D12System.h" />
     <ClInclude Include="D3D12Camera.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="D3D11Camera.h" />
     <ClInclude Include="D3D11Graphics.h" />
-    <ClInclude Include="ObjData.h" />
+    <ClInclude Include="D3D11ObjData.h" />
     <ClInclude Include="D3D11System.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CommonCamera.cpp" />
+    <ClCompile Include="CommonObjData.cpp" />
+    <ClCompile Include="CommonResourceManager.cpp" />
     <ClCompile Include="D3D12Graphics.cpp" />
     <ClCompile Include="D3D12ObjData.cpp" />
+    <ClCompile Include="D3D12Render.cpp" />
     <ClCompile Include="D3D12System.cpp" />
     <ClCompile Include="D3D12Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="D3D11Camera.cpp" />
     <ClCompile Include="D3D11Graphics.cpp" />
-    <ClCompile Include="ObjData.cpp" />
+    <ClCompile Include="D3D11ObjData.cpp" />
     <ClCompile Include="D3D11System.cpp" />
   </ItemGroup>
   <ItemGroup>
