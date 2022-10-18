@@ -8,8 +8,11 @@
 #include "D3D12Graphics.h"
 #include "D3D12ObjData.h"
 #include "D3D12Camera.h"
+#include "D3D12Render.h"
 
 D3D12ObjData g_testObj;
+D3D12ObjData g_testObj2;
+D3D12Render g_testRend;
 
 int D3D12Init()
 {
@@ -79,11 +82,18 @@ int D3D12Init()
          21,23,22,
     };
 
+    g_testRend.D3D12RenderInit();
+
+
     g_testObj.ObjInit(
         vertData, sizeof(vertData) / sizeof(VertexData12),
         index, sizeof(index) / sizeof(WORD));
     g_testObj.ObjTranslate(0.0f, 0.0f, -2.0f);
 
+    g_testObj2.ObjInit(
+        vertData, sizeof(vertData) / sizeof(VertexData12),
+        index, sizeof(index) / sizeof(WORD));
+    g_testObj2.ObjTranslate(-5.0f, 0.0f, -2.0f);
     return 0;
 }
 
@@ -91,14 +101,17 @@ void D3D12Update()
 {
     g_testObj.ObjUpdate();
     g_testObj.ObjRotate(0.001f, 0.002f, 0.003f);
+    g_testObj2.ObjRotate(0.001f, 0.002f, 0.003f);
 }
 
-void D3D12Render()
+void D3D12Draw()
 {
     D3D12Graphics::GetInstance().D3D12BeforeRender();
     //   ‚±‚±‚©‚çˆ—‚ğ‘‚­   //
 
+    g_testRend.D3D12RenderSet();
     g_testObj.ObjDraw();
+    g_testObj2.ObjDraw();
 
     //  ‚±‚±‚Ü‚Å‚Éˆ—‚ğ‘‚­  //
     D3D12Graphics::GetInstance().D3D12AfterRender();

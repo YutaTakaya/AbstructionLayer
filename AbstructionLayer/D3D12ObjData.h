@@ -96,9 +96,6 @@ private:
     ComPtr<ID3D12DescriptorHeap> m_pDescHeap;
     ComPtr<ID3D12Resource>  m_pTextureBuffer;
 
-    ComPtr<ID3D12PipelineState> m_pPipelineState;
-    ComPtr<ID3D12RootSignature> m_pRootSignature;
-
     XMMATRIX m_localMtx;
     XMFLOAT3 m_worldPos;
     //---------------------------------------------------------------------------
@@ -111,9 +108,6 @@ private:
     /// 
     /// m_pDescHeap         デスクリプタヒープ
     /// m_pTextureBuffer    テクスチャバッファ
-    /// 
-    /// m_pPipelineState    グラフィックスパイプライン
-    /// m_pRootSignature    ルートシグネチャ
     /// 
     /// m_localMtx          ローカルでの姿勢情報
     /// m_localPos          ローカル座標
