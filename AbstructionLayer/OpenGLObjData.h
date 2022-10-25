@@ -1,21 +1,11 @@
 //==============================================================================
-// Filename: D3D12ObjData.h
-// Description: DirectX12のオブジェクトデータ
-//              （DirectX12でのデバッグ用であり、最終的には11の物と統合予定）
+// Filename: OpenGLObjData.h
+// Description: OpenGLのオブジェクトデータ
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 #pragma once
 #include "CommonObjData.h"
-#include "D3D12Graphics.h"
-#include "D3D12Camera.h"
-using namespace DirectX;
-
-struct TexRGBA
-{
-    unsigned char R, G, B, A;
-};
-
-class D3D12ObjData : public CommonObjData
+class OpenGLObjData : public CommonObjData
 {
 public:
     //---------------------------------------------------------------------------
@@ -34,44 +24,50 @@ public:
         /*[in]*/    const VertexData* p_VData,
         /*[in]*/    const int vNum,
         /*[in]*/    const WORD* p_indexData,
-        /*[in]*/    const int indexNum);
-    
+        /*[in]*/    const int indexNum) override;
+
     //---------------------------------------------
-    /// 更新処理
+    /// 行列の更新
+    ///
+    /// \return void
     //--------------------------------------------- 
     void ObjUpdate();
 
     //---------------------------------------------
-    /// 頂点情報を用いたDirectX12での描画処理
+    /// 頂点情報を用いたDirectX11での描画処理
     ///
     /// \return void
     //--------------------------------------------- 
-    void ObjDraw();
+    void ObjDraw() override;
 
+    //---------------------------------------------
+    /// メンバ変数の解放処理
+    ///
+    /// \return void
+    //--------------------------------------------- 
+    void ObjUninit();
     //---------------------------------------------------------------------------
 
+    //---------------------------------------------
+    /// ワールド変換行列の回転角を変更する
+    /// 
+    /// \param[in] (angleX)     度数法でのX軸回転度数
+    /// \param[in] (angleY)     度数法でのY軸回転度数
+    /// \param[in] (angleZ)     度数法でのZ軸回転度数
+    ///
+    /// \return void
+    //--------------------------------------------- 
+    void ObjRotate(
+        /*[in]*/    const float angleX,
+        /*[in]*/    const float angleY,
+        /*[in]*/    const float angleZ) override;
 protected:
 
 private:
     //---------------------------------------------------------------------------
-    ComPtr<ID3D12Resource>  m_pVertexBuffer;
-    D3D12_VERTEX_BUFFER_VIEW    m_vertexBufferView = {};
-    ComPtr<ID3D12Resource>  m_pIndexBuffer;
-    D3D12_INDEX_BUFFER_VIEW m_indexBufferView = {};
-    int m_indexNum = 0;
-
-    ComPtr<ID3D12DescriptorHeap> m_pDescHeap;
-    ComPtr<ID3D12Resource>  m_pTextureBuffer;
+    std::vector<VertexData> m_vartex;
+    std::vector<WORD> m_index;
     //---------------------------------------------------------------------------
-    /// <summary>
-    /// m_pVertexBuffer     頂点バッファ
-    /// m_vertexBufferView  頂点バッファのビュー
-    /// m_pIndexBuffer      インデックスバッファ
-    /// m_indexBufferView   インデックスバッファのビュー
-    /// m_indexNum          インデックス数
-    /// 
-    /// m_pDescHeap         デスクリプタヒープ
-    /// m_pTextureBuffer    テクスチャバッファ
-    /// </summary>
+
 };
 

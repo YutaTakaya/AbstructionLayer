@@ -43,6 +43,15 @@
     <Filter Include="Common\hedder">
       <UniqueIdentifier>{1e77d0f8-8e5c-43df-9fd9-3f987d54f315}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OpenGL">
+      <UniqueIdentifier>{23aa83ee-a936-4842-b660-44aae442c9d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL\source">
+      <UniqueIdentifier>{198ced41-de99-472b-a84b-4dd631dd8b5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL\hedder">
+      <UniqueIdentifier>{fe56c657-6ab2-48a3-8386-b6c8f6dc70b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -91,7 +100,25 @@
       <Filter>Common\hedder</Filter>
     </ClInclude>
     <ClInclude Include="CommonResourceManager.h">
+      <Filter>Common\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonSystem.h">
+      <Filter>Common\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLSystem.h">
+      <Filter>OpenGL\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLGraphics.h">
+      <Filter>OpenGL\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLObjData.h">
+      <Filter>OpenGL\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonGraphics.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLCamera.h">
+      <Filter>OpenGL\hedder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -132,7 +159,25 @@
       <Filter>Common\source</Filter>
     </ClCompile>
     <ClCompile Include="CommonResourceManager.cpp">
+      <Filter>Common\source</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonSystem.cpp">
+      <Filter>Common\source</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLSystem.cpp">
+      <Filter>OpenGL\source</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLGraphics.cpp">
+      <Filter>OpenGL\source</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLObjData.cpp">
+      <Filter>OpenGL\source</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonGraphics.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLCamera.cpp">
+      <Filter>OpenGL\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

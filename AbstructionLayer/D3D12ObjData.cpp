@@ -10,7 +10,7 @@
 #include <iterator>
 #include <d3dcompiler.h>
 
-int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WORD* p_indexData, const int indexNum)
+int D3D12ObjData::ObjInit(const VertexData* p_VData, const int vNum, const WORD* p_indexData, const int indexNum)
 {
     HRESULT sts;
 
@@ -47,7 +47,7 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
     }
 
     // 頂点データのマップ
-    VertexData12* vertMap = nullptr;
+    VertexData* vertMap = nullptr;
     sts = m_pVertexBuffer->Map(0, nullptr, (void**)&vertMap);
     if (FAILED(sts))
     {
@@ -56,7 +56,7 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
 
     // ポインタで渡すとイテレータを取得できないのでコピーを取ってバッファにコピー
     // 回りくどい方法をしてるので改善の余地アリ
-    std::vector<VertexData12> vData;
+    std::vector<VertexData> vData;
     for (int i = 0; i < vNum; i++)
     {
         vData.emplace_back();
@@ -68,8 +68,8 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
 
     // バーテックスバッファービューの作成
     m_vertexBufferView.BufferLocation = m_pVertexBuffer.Get()->GetGPUVirtualAddress();
-    m_vertexBufferView.SizeInBytes = sizeof(VertexData12) * vNum;   // 総バイト数
-    m_vertexBufferView.StrideInBytes = sizeof(VertexData12);    // 1頂点当たりのサイズ
+    m_vertexBufferView.SizeInBytes = sizeof(VertexData) * vNum;   // 総バイト数
+    m_vertexBufferView.StrideInBytes = sizeof(VertexData);    // 1頂点当たりのサイズ
 
 
     // インデックスバッファの作成
@@ -154,7 +154,7 @@ int D3D12ObjData::ObjInit(const VertexData12* p_VData, const int vNum, const WOR
     {
         for (int y = 0; y < 256; y++)
         {
-            if ((((x / 32) + (y / 32)) % 2 == 1))
+            if ((((x / 64) + (y / 64)) % 2 == 1))
             {
                 textureData[x + (y * 256)].R = 0;
                 textureData[x + (y * 256)].G = 0;
@@ -328,16 +328,3 @@ void D3D12ObjData::ObjDraw()
     D3D12Graphics::GetInstance().getCmdPtr()->DrawIndexedInstanced(m_indexNum, 1, 0, 0, 0);
 }
 
-void D3D12ObjData::ObjRotate(const float angleX, const float angleY, const float angleZ)
-{
-    m_localMtx = ::XMMatrixMultiply(m_localMtx, ::XMMatrixRotationX(angleX));
-    m_localMtx = ::XMMatrixMultiply(m_localMtx, ::XMMatrixRotationY(angleY));
-    m_localMtx = ::XMMatrixMultiply(m_localMtx, ::XMMatrixRotationZ(angleZ));
-}
-
-void D3D12ObjData::ObjTranslate(const float posX, const float posY, const float posZ)
-{
-    m_worldPos.x = posX;
-    m_worldPos.y = posY;
-    m_worldPos.z = posZ;
-}

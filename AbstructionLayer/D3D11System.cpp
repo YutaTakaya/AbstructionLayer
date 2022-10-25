@@ -86,9 +86,9 @@ int D3D11Init()
 
     // カメラ初期化
     D3D11Camera::GetInstance().CreateInstance();
-    DirectX::XMFLOAT3 eye = { 0, 0, -20 };
-    DirectX::XMFLOAT3 lookat = { 0, 0, 1 };
-    DirectX::XMFLOAT3 up = { 0, 1, 0 };
+    FLOAT3 eye = { 0, 0, -20 };
+    FLOAT3 lookat = { 0, 0, 1 };
+    FLOAT3 up = { 0, 1, 0 };
     D3D11Camera::GetInstance().CameraInit(eye, lookat, up);
 
     return 0;
@@ -117,6 +117,9 @@ void D3D11Render()
 
     g_testObj1.ObjDraw();
     g_testObj2.ObjDraw();
+
+    // バックバッファを表示
+    D3D11Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);
 }
 
 

@@ -10,16 +10,26 @@
 #include "D3D12Graphics.h"
 #include "D3D12System.h"
 
+#include "OpenGLGraphics.h"
+#include "OpenGLSystem.h"
+
+#include "CommonResourceManager.h"
+#include "CommonSystem.h"
+
 #define MAX_LOADSTRING 100
 
 // 環境切り替え
-//#define D3D11
-#define D3D12
+#define COMMON      // 抽象化レイヤー
+//#define D3D11     // DX11単体
+//#define D3D12     // DX12単体
+//#define OpenGL    // OpenGL単体
 
 // グローバル変数:
 HINSTANCE hInst;                                // 現在のインターフェイス
 WCHAR szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
 WCHAR szWindowClass[MAX_LOADSTRING];            // メイン ウィンドウ クラス名
+
+APIType g_setType = APIType::OPENGL; // 使用するAPI
 
 // このコード モジュールに含まれる関数の宣言を転送します:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -59,6 +69,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     D3D12Init();
 #endif // D3D12
 
+#ifdef OpenGL
+    OpenGLInit();
+#endif // OpenGL
+
+#ifdef COMMON
+    CommonInit();
+#endif // COMMON
+
     // メインループ
     while (1)
     {
@@ -81,14 +99,25 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #ifdef D3D11
         D3D11Update();
         D3D11Render();
-        // バックバッファを表示
-        D3D11Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);
+
 #endif // D3D11
 
 #ifdef D3D12
         D3D12Update();
         D3D12Draw();
 #endif // D3D12
+
+#ifdef OpenGL
+        OpenGLUpdate();
+        OpenGLDraw();
+#endif // OpenGL
+
+
+#ifdef COMMON
+        CommonUpdate();
+        CommonDraw();
+#endif // COMMON
+
     }
 
 #ifdef D3D11
@@ -100,6 +129,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     D3D12Uninit();
     D3D12Graphics::DeleteInstance();
 #endif // D3D12
+
+#ifdef OpenGL
+    OpenGLUninit();
+    OpenGLGraphics::DeleteInstance();
+#endif // OpenGL
+
+
+#ifdef COMMON
+    CommonUninit();
+    CommonResourceManager::DeleteInstance();
+#endif // COMMON
+
     return (int) msg.wParam;
 }
 
@@ -167,6 +208,25 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
        return -1;
    }
 #endif // D3D12
+
+#ifdef OpenGL
+   OpenGLGraphics::CreateInstance();
+   if (OpenGLGraphics::GetInstance().OpenGLInit(hWnd, 1280, 720))
+   {
+       return -1;
+   }
+#endif // OpenGL
+
+
+#ifdef COMMON
+
+   CommonResourceManager::CreateInstance(g_setType);
+   if (CommonResourceManager::GetInstance().Init(hWnd, 1280, 720, g_setType) == -1)
+   {
+       return -1;
+   }
+#endif // COMMON
+
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);

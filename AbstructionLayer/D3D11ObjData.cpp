@@ -99,7 +99,7 @@ int D3D11ObjData::ObjInit(const VertexData* p_VData, const int vNum, const WORD*
     {
         for (int y = 0; y < texSize; y++)
         {
-            if ((x + y) % 2 == 0)
+            if (((x / 4) + (y / 4)) % 2 == 0)
             {
                 texData[(x * 4) + (y * 4 * texSize)] = 255;        // R
                 texData[(x * 4) + (y * 4 * texSize) + 1] = 255;    // G
@@ -156,7 +156,6 @@ void D3D11ObjData::ObjDraw()
     worldMtx = ::XMMatrixTranslation(m_worldPos.x, m_worldPos.y, m_worldPos.z);
     worldMtx = ::XMMatrixMultiply(m_localMtx, worldMtx);
 
-
     UINT stride = sizeof(VertexData);
     UINT offset = 0;
     D3D11Graphics::GetInstance().getDevContextPtr()->
@@ -192,18 +191,3 @@ void D3D11ObjData::ObjUninit()
     m_vertex.clear();
     m_pVertexBuff->Release();
 }
-
-void D3D11ObjData::ObjRotate(const float angleX, const float angleY, const float angleZ)
-{
-    m_localMtx = ::XMMatrixMultiply(m_localMtx, ::XMMatrixRotationX(angleX));
-    m_localMtx = ::XMMatrixMultiply(m_localMtx, ::XMMatrixRotationY(angleY));
-    m_localMtx = ::XMMatrixMultiply(m_localMtx, ::XMMatrixRotationZ(angleZ));
-}
-
-void D3D11ObjData::ObjTranslate(const float posX, const float posY, const float posZ)
-{
-    m_worldPos.x = posX;
-    m_worldPos.y = posY;
-    m_worldPos.z = posZ;
-}
-

@@ -5,18 +5,12 @@
 //==============================================================================
 #pragma once
 
+#include "CommonObjData.h"
 #include "D3D11Graphics.h"
 #include "D3D11Camera.h"
 #include <vector>
 
-struct VertexData
-{
-    XMFLOAT3 pos;
-    XMFLOAT2 uv;
-    XMFLOAT4 col;
-};
-
-class D3D11ObjData
+class D3D11ObjData : public CommonObjData
 {
 public:
     //---------------------------------------------------------------------------
@@ -34,7 +28,7 @@ public:
         /*[in]*/    const VertexData* p_VData,
         /*[in]*/    const int vNum,
         /*[in]*/    const WORD* p_indexData,
-        /*[in]*/    const int indexNum);
+        /*[in]*/    const int indexNum) override;
 
     //---------------------------------------------
     /// 行列の更新
@@ -48,7 +42,7 @@ public:
     ///
     /// \return void
     //--------------------------------------------- 
-    void ObjDraw();
+    void ObjDraw() override;
 
     //---------------------------------------------
     /// メンバ変数の解放処理
@@ -57,33 +51,7 @@ public:
     //--------------------------------------------- 
     void ObjUninit();
 
-    //---------------------------------------------
-    /// ワールド変換行列の回転角を変更する
-    /// 
-    /// \param[in] (angleX)     度数法でのX軸回転度数
-    /// \param[in] (angleY)     度数法でのY軸回転度数
-    /// \param[in] (angleZ)     度数法でのZ軸回転度数
-    ///
-    /// \return void
-    //--------------------------------------------- 
-    void ObjRotate(
-        /*[in]*/    const float angleX,
-        /*[in]*/    const float angleY,
-        /*[in]*/    const float angleZ);
 
-    //---------------------------------------------
-    /// ワールド変換行列の座標を変更する
-    /// 
-    /// \param[in] (posX)     X座標
-    /// \param[in] (posY)     Y座標
-    /// \param[in] (posZ)     Z座標
-    ///
-    /// \return void
-    //--------------------------------------------- 
-    void ObjTranslate(
-        /*[in]*/    const float posX,
-        /*[in]*/    const float posY,
-        /*[in]*/    const float posZ);
 
     //---------------------------------------------------------------------------
 
@@ -100,8 +68,6 @@ private:
     ComPtr<ID3D11ShaderResourceView>	m_pShaderResourceView;
     ComPtr<ID3D11SamplerState>	m_pSamplerState;
 
-    XMFLOAT3 m_worldPos;
-    XMMATRIX m_localMtx;
     //---------------------------------------------------------------------------
     /// <summary>
     /// m_vertex                頂点情報
@@ -111,8 +77,5 @@ private:
     /// m_texture               テクスチャバッファ
     /// m_shaderResourceView	シェーダーリソースビュー
 	/// m_samplerState			サンプラーステート
-	/// 
-	/// m_worldPos              ワールド座標
-	/// m_localMtx              ワールド変換行列
     /// </summary>
 };

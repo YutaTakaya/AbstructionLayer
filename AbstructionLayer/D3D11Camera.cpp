@@ -6,9 +6,9 @@
 #include "D3D11Camera.h"
 
 int D3D11Camera::CameraInit(
-    const XMFLOAT3 eye, 
-    const XMFLOAT3 lookat, 
-    const XMFLOAT3 up)
+    const FLOAT3 eye, 
+    const FLOAT3 lookat, 
+    const FLOAT3 up)
 {
     // コンスタントバッファの作成
     D3D11_BUFFER_DESC cbDesc;

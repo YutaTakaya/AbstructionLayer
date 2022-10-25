@@ -1,80 +1,49 @@
 //==============================================================================
-// Filename: CommonResourceManager.h
-// Description: 抽象化レイヤー用リソース管理クラス
+// Filename: OpenGLGraphics.h
+// Description: OpenGLの描画システム
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 #pragma once
-#pragma comment(lib,"d3d11.lib")
-#pragma comment(lib,"d3d12.lib")
-#pragma comment(lib,"dxgi.lib")
-#pragma comment(lib,"d3dcompiler.lib")
+#pragma comment (lib,"opengl32.lib")
+#pragma comment (lib,"glu32.lib")
+#include <windows.h>
 
-#include <d3d11.h>
-#include <d3d12.h>
-#include <DirectXMath.h>
-#include <d3dcompiler.h>
-#include <wrl/client.h>
-#include <dxgi1_6.h>
-#include <vector>
-#include <memory>
-
-#include "D3D11Graphics.h"
-#include "D3D12Graphics.h"
-#include "D3D11Camera.h"
-#include "D3D12Camera.h"
-#include "D3D12Render.h"
-#include "OpenGLGraphics.h"
-#include "OpenGLCamera.h"
-
-enum class APIType
-{
-    NONE,
-    D3D11,
-    D3D12,
-    OPENGL,
-    VULKAN
-};
-
-class CommonResourceManager
+class OpenGLGraphics
 {
 public:
     //---------------------------------------------------------------------------
     //---------------------------------------------
-    /// 初期化関数
+    /// OpenGLの初期化関数
     ///
     /// \param[in] ( hWnd )         ウィンドウハンドル
     /// \param[in] ( width )        ウィンドウの幅
-    /// \param[in] ( height )       ウィンドウの高さ
-    /// \param[in] ( type )         APIの種類
+    /// \param[in] ( height )       ウィンドウの高さ 
     ///
     /// \return エラーの場合-1、正常に終了した場合0が返される
     //--------------------------------------------- 
-    int Init(
+    int OpenGLInit(
         /*[in]*/	const HWND hWnd,
         /*[in]*/	const int width,
-        /*[in]*/	const int height,
-        /*[in]*/    const APIType type);
+        /*[in]*/	const int height);
 
     //---------------------------------------------
-    /// 描画前処理関数
+    /// OpenGLの描画事前処理
     ///
-    /// \return void
+    /// \return エラーの場合-1、正常に終了した場合0が返される
     //--------------------------------------------- 
-    int BeforeRenderer();
+    int OpenGLBeforeRender();
 
     //---------------------------------------------
-    /// 描画後処理関数
+    /// OpenGLの描画事後処理
     ///
-    /// \return void
+    /// \return エラーの場合-1、正常に終了した場合0が返される
     //--------------------------------------------- 
-    int AfterRenderer();
-
-    //---------------------------------------------------------------------------
+    int OpenGLAfterRender();
 
     //---------------------------------------------
     /// インスタンスの作成
     //--------------------------------------------- 
-    static void CreateInstance(APIType type);
+    static void CreateInstance();
 
     //---------------------------------------------
     /// インスタンスの削除
@@ -86,29 +55,25 @@ public:
     /// 
     /// \return インスタンス
     //--------------------------------------------- 
-    static CommonResourceManager& GetInstance()
+    static OpenGLGraphics& GetInstance()
     {
         return *s_pInstance;
     }
+    //---------------------------------------------------------------------------
 
-    //---------------------------------------------
-    /// 使用APIの取得
-    /// 
-    /// \return APIの種類
-    //--------------------------------------------- 
-    APIType getAPIType()
+    HGLRC gethglrc()
     {
-        return m_nowType;
+        return m_RenderingContext;
     }
 protected:
 
 private:
     //---------------------------------------------------------------------------
-    APIType m_nowType;
-    static inline CommonResourceManager* s_pInstance;
-    D3D12Render m_render;
+    HDC m_DeviceContext;
+    HGLRC m_RenderingContext;
+
+    static inline OpenGLGraphics* s_pInstance;
     //---------------------------------------------------------------------------
-    /// <summary>
-    /// </summary>
+
 };
 

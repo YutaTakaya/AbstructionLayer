@@ -142,8 +142,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CommonCamera.h" />
+    <ClInclude Include="CommonGraphics.h" />
     <ClInclude Include="CommonObjData.h" />
     <ClInclude Include="CommonResourceManager.h" />
+    <ClInclude Include="CommonSystem.h" />
     <ClInclude Include="D3D12Graphics.h" />
     <ClInclude Include="D3D12ObjData.h" />
     <ClInclude Include="D3D12Render.h" />
@@ -155,13 +157,19 @@
     <ClInclude Include="D3D11ObjData.h" />
     <ClInclude Include="D3D11System.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="OpenGLCamera.h" />
+    <ClInclude Include="OpenGLGraphics.h" />
+    <ClInclude Include="OpenGLObjData.h" />
+    <ClInclude Include="OpenGLSystem.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CommonCamera.cpp" />
+    <ClCompile Include="CommonGraphics.cpp" />
     <ClCompile Include="CommonObjData.cpp" />
     <ClCompile Include="CommonResourceManager.cpp" />
+    <ClCompile Include="CommonSystem.cpp" />
     <ClCompile Include="D3D12Graphics.cpp" />
     <ClCompile Include="D3D12ObjData.cpp" />
     <ClCompile Include="D3D12Render.cpp" />
@@ -172,6 +180,10 @@
     <ClCompile Include="D3D11Graphics.cpp" />
     <ClCompile Include="D3D11ObjData.cpp" />
     <ClCompile Include="D3D11System.cpp" />
+    <ClCompile Include="OpenGLCamera.cpp" />
+    <ClCompile Include="OpenGLGraphics.cpp" />
+    <ClCompile Include="OpenGLObjData.cpp" />
+    <ClCompile Include="OpenGLSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AbstructionLayer.rc" />

@@ -5,7 +5,7 @@
 //==============================================================================
 #include "D3D12Camera.h"
 
-int D3D12Camera::CameraInit(const XMFLOAT3 eye, const XMFLOAT3 lookat, const XMFLOAT3 up)
+int D3D12Camera::CameraInit(const FLOAT3 eye, const FLOAT3 lookat, const FLOAT3 up)
 {
     HRESULT sts;
 

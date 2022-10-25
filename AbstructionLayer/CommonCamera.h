@@ -4,8 +4,10 @@
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 #pragma once
-#include "D3D12Camera.h"
-#include "D3D11Camera.h"
+struct FLOAT3
+{
+    float x, y, z;
+};
 
 class CommonCamera
 {
@@ -19,9 +21,9 @@ protected:
 
 private:
     //---------------------------------------------------------------------------
-    XMMATRIX m_pWorldMtx = {};
-    XMMATRIX m_pViewMtx = {};
-    XMMATRIX m_pProjMtx = {};
+    //XMMATRIX m_pWorldMtx = {};
+    //XMMATRIX m_pViewMtx = {};
+    //XMMATRIX m_pProjMtx = {};
     //---------------------------------------------------------------------------
     /// <summary>
     /// m_pWorldMtx		ワールド変換行列（削除予定）

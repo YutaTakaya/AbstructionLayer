@@ -4,15 +4,16 @@
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 #pragma once
+#include "CommonCamera.h"
 #include "D3D11Graphics.h"
 #include <wrl/client.h>
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 
 struct ConstantBuffer {
-    XMFLOAT4X4 world;
-    XMFLOAT4X4 view;
-    XMFLOAT4X4 projection;
+    DirectX::XMFLOAT4X4 world;
+    DirectX::XMFLOAT4X4 view;
+    DirectX::XMFLOAT4X4 projection;
 };
 
 class D3D11Camera
@@ -29,9 +30,9 @@ public:
 	/// \return エラーが出た場合-1が、正常に終了した場合0が返される
 	//--------------------------------------------- 
     int CameraInit(
-        /*[in]*/    const XMFLOAT3 eye, 
-        /*[in]*/    const XMFLOAT3 lookat,
-        /*[in]*/    const XMFLOAT3 up);
+        /*[in]*/    const FLOAT3 eye, 
+        /*[in]*/    const FLOAT3 lookat,
+        /*[in]*/    const FLOAT3 up);
 
 	//---------------------------------------------
 	/// カメラ情報と各種行列を更新し、シェーダーにコンパイルする
