@@ -1,6 +1,6 @@
 //==============================================================================
 // Filename: D3D12System.h
-// Description: DirectX12の基本処理
+// Description: DirectX12単体でのサンプル処理
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 

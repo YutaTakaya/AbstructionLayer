@@ -1,6 +1,6 @@
 //==============================================================================
 // Filename: OpenGLSystem.h
-// Description: OpenGLの基本処理
+// Description: OpenGL単体でのサンプル処理
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 #pragma once

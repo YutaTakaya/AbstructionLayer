@@ -140,6 +140,8 @@ int D3D11ObjData::ObjInit(const VertexData* p_VData, const int vNum, const WORD*
 
     // ワールド変換行列を単位行列で初期化
     m_localMtx = ::XMMatrixIdentity();
+
+    m_Render.D3D11RenderInit();
     return 0;
 }
 
@@ -165,12 +167,7 @@ void D3D11ObjData::ObjDraw()
     D3D11Graphics::GetInstance().getDevContextPtr()->
         IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     D3D11Camera::GetInstance().CameraUpdateConstBuff(worldMtx);
-    D3D11Graphics::GetInstance().getDevContextPtr()->
-        VSSetShader(D3D11Graphics::GetInstance().getVertexShaderPtr(), 0, 0);
-    D3D11Graphics::GetInstance().getDevContextPtr()->
-        PSSetShader(D3D11Graphics::GetInstance().getPixelShaderPtr(), 0, 0);
-    D3D11Graphics::GetInstance().getDevContextPtr()->
-        IASetInputLayout(D3D11Graphics::GetInstance().getInputLayoutPtr());
+    m_Render.D3D11RenderSet();
 
     D3D11Graphics::GetInstance().getDevContextPtr()->
         PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());

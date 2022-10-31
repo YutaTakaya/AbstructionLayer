@@ -148,25 +148,26 @@ int D3D12ObjData::ObjInit(const VertexData* p_VData, const int vNum, const WORD*
         return -1;
     }
 
-    // テクスチャの生成（仮置き）
+    // テクスチャの生成
     std::vector<TexRGBA> textureData(256 * 256);
     for (int x = 0; x < 256; x++)
     {
         for (int y = 0; y < 256; y++)
         {
+            int alignment = x + (y * 256);
             if ((((x / 64) + (y / 64)) % 2 == 1))
             {
-                textureData[x + (y * 256)].R = 0;
-                textureData[x + (y * 256)].G = 0;
-                textureData[x + (y * 256)].B = 0;
-                textureData[x + (y * 256)].A = 255;
+                textureData[alignment].R = 0;
+                textureData[alignment].G = 0;
+                textureData[alignment].B = 0;
+                textureData[alignment].A = 255;
             }
             else
             {
-                textureData[x + (y * 256)].R = 255;
-                textureData[x + (y * 256)].G = 255;
-                textureData[x + (y * 256)].B = 255;
-                textureData[x + (y * 256)].A = 255;
+                textureData[alignment].R = 255;
+                textureData[alignment].G = 255;
+                textureData[alignment].B = 255;
+                textureData[alignment].A = 255;
             }
         }
     }

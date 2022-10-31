@@ -157,8 +157,8 @@ private:
     ComPtr<ID3D12CommandAllocator>  m_pCommandAllocator;
     ComPtr<ID3D12Fence> m_pFence;
     UINT64 m_fenceVal = 0;
-    D3D12_VIEWPORT m_pViewport = {}; // TODO : ユニークポインタ化
-    D3D12_RECT m_pScissorRect = {}; // TODO : ユニークポインタ化
+    D3D12_VIEWPORT m_pViewport = {};
+    D3D12_RECT m_pScissorRect = {};
     ComPtr<ID3D12Resource>  m_pDepthBuffer;
     ComPtr<ID3D12DescriptorHeap> m_pDepthStencilViewHeap;
 

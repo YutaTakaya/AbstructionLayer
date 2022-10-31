@@ -1,5 +1,5 @@
 //==============================================================================
-// Filename: D3D12Graphics.h
+// Filename: D3D12Graphics.cpp
 // Description: DirectX12‚Ì•`‰æƒVƒXƒeƒ€
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================

@@ -11,7 +11,7 @@ int D3D12Render::D3D12RenderInit()
 
     // ルートシグネチャの初期化
 
-// サンプラーデスクの作成
+    // サンプラーデスクの作成
     D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
     samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 横方向繰り返し
     samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 方向繰り返し

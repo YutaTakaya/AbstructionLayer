@@ -12,7 +12,7 @@ using namespace DirectX;
 
 struct TexRGBA
 {
-    unsigned char R, G, B, A;
+    byte R, G, B, A;
 };
 
 class D3D12ObjData : public CommonObjData

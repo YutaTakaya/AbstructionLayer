@@ -114,11 +114,14 @@
     <ClInclude Include="OpenGLObjData.h">
       <Filter>OpenGL\hedder</Filter>
     </ClInclude>
-    <ClInclude Include="CommonGraphics.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="OpenGLCamera.h">
       <Filter>OpenGL\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonGraphics.h">
+      <Filter>Common\hedder</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Render.h">
+      <Filter>D3D11\hedder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,11 +176,14 @@
     <ClCompile Include="OpenGLObjData.cpp">
       <Filter>OpenGL\source</Filter>
     </ClCompile>
-    <ClCompile Include="CommonGraphics.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="OpenGLCamera.cpp">
       <Filter>OpenGL\source</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonGraphics.cpp">
+      <Filter>Common\source</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Render.cpp">
+      <Filter>D3D11\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

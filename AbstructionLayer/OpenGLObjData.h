@@ -68,6 +68,9 @@ private:
     std::vector<VertexData> m_vartex;
     std::vector<WORD> m_index;
     //---------------------------------------------------------------------------
-
+    /// <summary>
+    /// m_vertex        頂点データ
+    /// m_index         インデックスデータ
+    /// </summary>
 };
 

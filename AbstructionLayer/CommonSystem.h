@@ -1,6 +1,6 @@
 //==============================================================================
 // Filename: CommonSystem.h
-// Description: 抽象化レイヤーの基本処理
+// Description: 抽象化レイヤーのサンプル処理
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 #pragma once

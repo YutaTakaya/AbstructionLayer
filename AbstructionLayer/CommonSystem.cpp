@@ -1,6 +1,6 @@
 //==============================================================================
 // Filename: CommonSystem.cpp
-// Description: 抽象化レイヤーの基本処理
+// Description: 抽象化レイヤーのサンプル処理
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 #include "CommonSystem.h"
@@ -12,6 +12,7 @@ CommonObjData* g_testObj;
 
 int CommonInit()
 {
+    // 頂点データ
     VertexData v[] = {
         //////          座標           //////  /////        UV        //////  //////          カラー          //////
         // 前面
@@ -51,6 +52,7 @@ int CommonInit()
         {DirectX::XMFLOAT3(3.0f,-3.0f, 3.0f), DirectX::XMFLOAT2(1.0f,1.0f), DirectX::XMFLOAT4(0.0f,0.0f,1.0f,1.0f)},
     };
 
+    // インデックスデータ
     WORD index[] = {
         // 前面
         0,1,2,
@@ -72,25 +74,10 @@ int CommonInit()
         21,23,22,
     };
 
-    switch (CommonResourceManager::GetInstance().getAPIType())
-    {
-    case APIType::NONE:
-        break;
-    case APIType::D3D11:
-        g_testObj = new D3D11ObjData;
-        break;
-    case APIType::D3D12:
-        g_testObj = new D3D12ObjData;
-        break;
-    case APIType::OPENGL:
-        g_testObj = new OpenGLObjData;
-        break;
-    case APIType::VULKAN:
-        break;
-    default:
-        break;
-    }
+    // 使用API用の型にキャスト
+    g_testObj = CommonResourceManager::GetInstance().CreateObject();
 
+    // 頂点、インデックスデータの初期化
     if (g_testObj->ObjInit(
         v, sizeof(v) / sizeof(VertexData),
         index, sizeof(index) / sizeof(WORD)) == -1)
@@ -102,7 +89,17 @@ int CommonInit()
 
 int CommonUpdate()
 {
+    // オブジェクト回転テスト
     g_testObj->ObjRotate(0.01f, 0.01f, 0.01f);
+
+    // カメラ視点移動テスト
+    static FLOAT3 eyeh = { 10.0f,-10.0f,-20.0f };
+    eyeh.x += 0.02f;
+    eyeh.y += 0.02f;
+    eyeh.z += 0.02f;
+    CommonCamera::GetInstance().SetEye(eyeh);
+    CommonCamera::GetInstance().CameraUpdate();
+
     return 0;
 }
 
@@ -110,6 +107,7 @@ int CommonDraw()
 {
     CommonResourceManager::GetInstance().BeforeRenderer();
 
+    // オブジェクトごとの描画処理はここに書く
     g_testObj->ObjDraw();
     
     CommonResourceManager::GetInstance().AfterRenderer();
@@ -118,5 +116,6 @@ int CommonDraw()
 
 int CommonUninit()
 {
+    delete g_testObj;
     return 0;
 }

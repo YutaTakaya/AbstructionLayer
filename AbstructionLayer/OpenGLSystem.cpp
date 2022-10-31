@@ -1,3 +1,8 @@
+//==============================================================================
+// Filename: OpenGLSystem.cpp
+// Description: OpenGL’P‘Ì‚Å‚ÌƒTƒ“ƒvƒ‹ˆ—
+// Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
+//==============================================================================
 #include "OpenGLSystem.h"
 #include "OpenGLGraphics.h"
 #include "OpenGLObjData.h"

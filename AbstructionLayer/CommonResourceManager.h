@@ -35,6 +35,12 @@ enum class APIType
     VULKAN
 };
 
+// プロトタイプ宣言
+class CommonObjData;
+class D3D11ObjData;
+class D3D12ObjData;
+class OpenGLObjData;
+
 class CommonResourceManager
 {
 public:
@@ -56,6 +62,15 @@ public:
         /*[in]*/    const APIType type);
 
     //---------------------------------------------
+    /// オブジェクト生成関数
+    ///
+    /// \param[out] ( hWnd )         ウィンドウハンドル
+    ///
+    /// \return エラーの場合-1、正常に終了した場合0が返される
+    //---------------------------------------------     
+    CommonObjData* CreateObject();
+
+    //---------------------------------------------
     /// 描画前処理関数
     ///
     /// \return void
@@ -69,12 +84,10 @@ public:
     //--------------------------------------------- 
     int AfterRenderer();
 
-    //---------------------------------------------------------------------------
-
     //---------------------------------------------
     /// インスタンスの作成
     //--------------------------------------------- 
-    static void CreateInstance(APIType type);
+    static void CreateInstance();
 
     //---------------------------------------------
     /// インスタンスの削除
@@ -104,11 +117,14 @@ protected:
 
 private:
     //---------------------------------------------------------------------------
-    APIType m_nowType;
+    APIType m_nowType = {};
+    D3D12Render m_render = {};
     static inline CommonResourceManager* s_pInstance;
-    D3D12Render m_render;
     //---------------------------------------------------------------------------
     /// <summary>
+    /// m_nowType   使用するAPIの種類
+    /// D3D12Render DX12で使用する描画処理
+    /// s_pInstance インスタンス
     /// </summary>
 };
 

@@ -1,3 +1,8 @@
+//==============================================================================
+// Filename: OpenGLObjData.cpp
+// Description: OpenGLのオブジェクトデータ
+// Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
+//==============================================================================
 #include "OpenGLObjData.h"
 #include "gl/gl.h"
 

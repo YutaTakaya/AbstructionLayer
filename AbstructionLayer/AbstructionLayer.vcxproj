@@ -146,6 +146,7 @@
     <ClInclude Include="CommonObjData.h" />
     <ClInclude Include="CommonResourceManager.h" />
     <ClInclude Include="CommonSystem.h" />
+    <ClInclude Include="D3D11Render.h" />
     <ClInclude Include="D3D12Graphics.h" />
     <ClInclude Include="D3D12ObjData.h" />
     <ClInclude Include="D3D12Render.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="CommonObjData.cpp" />
     <ClCompile Include="CommonResourceManager.cpp" />
     <ClCompile Include="CommonSystem.cpp" />
+    <ClCompile Include="D3D11Render.cpp" />
     <ClCompile Include="D3D12Graphics.cpp" />
     <ClCompile Include="D3D12ObjData.cpp" />
     <ClCompile Include="D3D12Render.cpp" />

@@ -1,4 +1,4 @@
-﻿// AbstructionLayer.cpp : アプリケーションのエントリ ポイントを定義します。
+﻿// main.cpp : アプリケーションのエントリ ポイントを定義します。
 //
 
 #include "framework.h"
@@ -20,6 +20,9 @@
 
 // 環境切り替え
 #define COMMON      // 抽象化レイヤー
+APIType g_setType = APIType::OPENGL; // 使用するAPI
+
+// 以下単体デバッグ用
 //#define D3D11     // DX11単体
 //#define D3D12     // DX12単体
 //#define OpenGL    // OpenGL単体
@@ -28,8 +31,6 @@
 HINSTANCE hInst;                                // 現在のインターフェイス
 WCHAR szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
 WCHAR szWindowClass[MAX_LOADSTRING];            // メイン ウィンドウ クラス名
-
-APIType g_setType = APIType::OPENGL; // 使用するAPI
 
 // このコード モジュールに含まれる関数の宣言を転送します:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -220,7 +221,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 #ifdef COMMON
 
-   CommonResourceManager::CreateInstance(g_setType);
+   CommonResourceManager::CreateInstance();
    if (CommonResourceManager::GetInstance().Init(hWnd, 1280, 720, g_setType) == -1)
    {
        return -1;

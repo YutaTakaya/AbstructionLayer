@@ -106,36 +106,6 @@ public:
 	}
 
 	//---------------------------------------------
-	/// ヴァーテックスシェーダー情報のポインタを取得する
-	/// 
-	/// \return ヴァーテックスシェーダー情報のポインタ
-	//--------------------------------------------- 
-	ID3D11VertexShader* getVertexShaderPtr()
-	{
-		return m_pSpriteVS.Get();
-	}
-
-	//---------------------------------------------
-	/// ピクセルシェーダー情報のポインタを取得する
-	/// 
-	/// \return ピクセルシェーダー情報のポインタ
-	//--------------------------------------------- 
-	ID3D11PixelShader* getPixelShaderPtr()
-	{
-		return m_pSpritePS.Get();
-	}
-
-	//---------------------------------------------
-	/// インプットレイアウト情報のポインタを取得する
-	/// 
-	/// \return インプットレイアウト情報のポインタ
-	//--------------------------------------------- 
-	ID3D11InputLayout* getInputLayoutPtr()
-	{
-		return m_pSpriteInputLayout.Get();
-	}
-
-	//---------------------------------------------
 	/// レンダーターゲットビューのダブルポインタを取得する
 	/// 
 	/// \return レンダーターゲットビューのダブルポインタ
@@ -168,10 +138,6 @@ private:
 	ComPtr<ID3D11RenderTargetView>	m_pRenderTargetView;
 	ComPtr<ID3D11DepthStencilView>	m_pDepthStencilView;
 
-	ComPtr<ID3D11VertexShader> m_pSpriteVS = nullptr;
-	ComPtr<ID3D11PixelShader> m_pSpritePS = nullptr;
-	ComPtr<ID3D11InputLayout> m_pSpriteInputLayout = nullptr;
-
 	static inline D3D11Graphics* s_pInstance;
 	//---------------------------------------------------------------------------
 	/// <summary>
@@ -182,11 +148,6 @@ private:
 	/// m_pDepthStencilTexture	深度ステンシルテクスチャ
 	/// m_pRenderTargetView		RTV
 	/// m_pDepthStencilView		深度ステンシルビュー
-
-	/// 
-	/// m_pSpriteVS				頂点シェーダー情報
-	/// m_pSpritePS				ピクセルシェーダー情報
-	/// m_pSpriteInputLayout		入力レイアウト情報
 	/// 
 	/// s_pInstance				インスタンス
 	/// </summary>

@@ -16,7 +16,7 @@ struct ConstantBuffer12 {
     XMFLOAT4X4 projection;
 };
 
-class D3D12Camera
+class D3D12Camera : public CommonCamera
 {
 public:
     //---------------------------------------------------------------------------
@@ -32,7 +32,14 @@ public:
     int CameraInit(
         /*[in]*/    const FLOAT3 eye,
         /*[in]*/    const FLOAT3 lookat,
-        /*[in]*/    const FLOAT3 up);
+        /*[in]*/    const FLOAT3 up) override;
+
+    //---------------------------------------------
+    /// ビュー変換行列の更新（仮想関数）
+    ///
+    /// \return エラーが出た場合-1が、正常に終了した場合0が返される
+    //--------------------------------------------- 
+    void CameraUpdate() override;
  
     //---------------------------------------------
     /// カメラ情報と各種行列を更新し、シェーダーにコンパイルする

@@ -71,8 +71,8 @@ public:
 
 protected:
     //---------------------------------------------------------------------------
-    XMMATRIX m_localMtx;
-    XMFLOAT3 m_worldPos;
+    XMMATRIX m_localMtx = {};
+    XMFLOAT3 m_worldPos = {};
     //---------------------------------------------------------------------------
     /// <summary>
     /// m_localMtx          ÉçÅ[ÉJÉãÇ≈ÇÃépê®èÓïÒ

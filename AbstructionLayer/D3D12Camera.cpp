@@ -12,10 +12,13 @@ int D3D12Camera::CameraInit(const FLOAT3 eye, const FLOAT3 lookat, const FLOAT3 
     // ワールド変換行列の作成
     m_pWorldMtx = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 
+    m_eye = eye;
+    m_lookat = lookat;
+    m_up = up;
     // ビュー変換行列の作成
-    XMVECTOR eyeVec = XMVectorSet(eye.x, eye.y, eye.z, 0);
-    XMVECTOR lookatVec = XMVectorSet(lookat.x, lookat.y, lookat.z, 0);
-    XMVECTOR upVec = XMVectorSet(up.x, up.y, up.z, 0);
+    XMVECTOR eyeVec = XMVectorSet(m_eye.x, m_eye.y, m_eye.z, 0);
+    XMVECTOR lookatVec = XMVectorSet(m_lookat.x, m_lookat.y, m_lookat.z, 0);
+    XMVECTOR upVec = XMVectorSet(m_up.x, m_up.y, m_up.z, 0);
     m_pViewMtx = XMMatrixLookAtLH(eyeVec, lookatVec, upVec);
 
     // プロジェクション行列の作成
@@ -72,6 +75,19 @@ int D3D12Camera::CameraInit(const FLOAT3 eye, const FLOAT3 lookat, const FLOAT3 
     return 0;
 }
 
+void D3D12Camera::CameraUpdate()
+{
+    if (m_updateFlag)
+    {
+        // ビュー変換行列の作成
+        XMVECTOR eyeVec = XMVectorSet(m_eye.x, m_eye.y, m_eye.z, 0);
+        XMVECTOR lookatVec = XMVectorSet(m_lookat.x, m_lookat.y, m_lookat.z, 0);
+        XMVECTOR upVec = XMVectorSet(m_up.x, m_up.y, m_up.z, 0);
+        m_pViewMtx = XMMatrixLookAtLH(eyeVec, lookatVec, upVec);
+        m_updateFlag = false;
+    }
+}
+
 int D3D12Camera::CameraUpdateConstBuff(const XMMATRIX worldMtx)
 {
     ConstantBuffer12* pMap; // マップ先ポインタ
@@ -96,6 +112,7 @@ void D3D12Camera::CreateInstance()
     DeleteInstance();
 
     s_pInstance = new D3D12Camera();
+    CopyInstance(s_pInstance);
 }
 
 void D3D12Camera::DeleteInstance()
@@ -104,5 +121,6 @@ void D3D12Camera::DeleteInstance()
     {
         delete s_pInstance;
         s_pInstance = nullptr;
+        DeleteCopyInstance();
     }
 }

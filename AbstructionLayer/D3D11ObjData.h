@@ -8,6 +8,7 @@
 #include "CommonObjData.h"
 #include "D3D11Graphics.h"
 #include "D3D11Camera.h"
+#include "D3D11Render.h"
 #include <vector>
 
 class D3D11ObjData : public CommonObjData
@@ -68,14 +69,18 @@ private:
     ComPtr<ID3D11ShaderResourceView>	m_pShaderResourceView;
     ComPtr<ID3D11SamplerState>	m_pSamplerState;
 
+    D3D11Render m_Render;
     //---------------------------------------------------------------------------
     /// <summary>
     /// m_vertex                頂点情報
     /// m_index                 インデックスデータ
     /// m_vertexBuff            頂点バッファ
     /// m_indexBuff             インデックスバッファ
+    /// 
     /// m_texture               テクスチャバッファ
     /// m_shaderResourceView	シェーダーリソースビュー
 	/// m_samplerState			サンプラーステート
+	/// 
+	/// m_Render                オブジェクトごとの描画システム
     /// </summary>
 };

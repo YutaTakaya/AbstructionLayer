@@ -2,6 +2,10 @@
 
 int CommonObjData::ObjInit(const VertexData* p_VData, const int vNum, const WORD* p_indexData, const int indexNum)
 {
+    p_VData;
+    vNum;
+    p_indexData;
+    indexNum;
     return -1;
 }
 

@@ -1,8 +1,11 @@
 #include "CommonResourceManager.h"
+#include "D3D11ObjData.h"
+#include "D3D12ObjData.h"
+#include "OpenGLObjData.h"
 
 int CommonResourceManager::Init(const HWND hWnd, const int width, const int height, const APIType type)
 {
-    FLOAT3 eye = { 0.0f,0.0f,-20.0f };
+    FLOAT3 eye = { 0.0f,0.0f,-50.0f };
     FLOAT3 lookat = { 0.0f,0.0f,0.0f };
     FLOAT3 up = { 0.0f,1.0f,0.0f };
 
@@ -34,6 +37,31 @@ int CommonResourceManager::Init(const HWND hWnd, const int width, const int heig
     }
     m_nowType = type;
     return 0;
+}
+
+CommonObjData* CommonResourceManager::CreateObject()
+{
+    switch (m_nowType)
+    {
+    case APIType::NONE:
+        return nullptr;
+        break;
+    case APIType::D3D11:
+        return new D3D11ObjData;
+        break;
+    case APIType::D3D12:
+        return new D3D12ObjData;
+        break;
+    case APIType::OPENGL:
+        return new OpenGLObjData;
+        break;
+    case APIType::VULKAN:
+        return nullptr;
+        break;
+    default:
+        return nullptr;
+        break;
+    }
 }
 
 int CommonResourceManager::BeforeRenderer()
@@ -95,26 +123,9 @@ int CommonResourceManager::AfterRenderer()
     return 0;
 }
 
-void CommonResourceManager::CreateInstance(APIType type)
+void CommonResourceManager::CreateInstance()
 {
     DeleteInstance();
-
-    switch (type)
-    {
-    case APIType::NONE:
-        break;
-    case APIType::D3D11:
-        s_pInstance;
-        break;
-    case APIType::D3D12:
-        break;
-    case APIType::OPENGL:
-        break;
-    case APIType::VULKAN:
-        break;
-    default:
-        break;
-    }
     s_pInstance = new CommonResourceManager();
     s_pInstance->m_nowType = APIType::NONE;
 }

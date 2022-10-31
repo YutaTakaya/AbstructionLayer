@@ -1,15 +1,16 @@
 //==============================================================================
 // Filename: D3D11System.h
-// Description: D3D11の基本処理
+// Description: DirectX11単体でのサンプル処理
 // Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
 //==============================================================================
 
 #include "D3D11System.h"
 #include "D3D11Graphics.h"
 #include "D3D11Camera.h"
+#include "D3D11Render.h"
 
-D3D11ObjData g_testObj1;
-D3D11ObjData g_testObj2;
+D3D11ObjData g_testObj;
+D3D11Render g_testRender;
 
 int D3D11Init()
 {
@@ -74,15 +75,12 @@ int D3D11Init()
     };
 
     // オブジェクト初期化
-    g_testObj1.ObjInit(
+    g_testObj.ObjInit(
         v, sizeof(v) / sizeof(VertexData),
         index,sizeof(index)/sizeof(WORD));
-    g_testObj1.ObjTranslate(5, 0, 0);
+    g_testObj.ObjTranslate(5, 0, 0);
 
-    g_testObj2.ObjInit(
-        v, sizeof(v) / sizeof(VertexData),
-        index, sizeof(index) / sizeof(WORD));
-    g_testObj2.ObjTranslate(0, 0, 10);
+
 
     // カメラ初期化
     D3D11Camera::GetInstance().CreateInstance();
@@ -96,14 +94,12 @@ int D3D11Init()
 
 void D3D11Update()
 {
-    g_testObj1.ObjUpdate();
-    g_testObj2.ObjUpdate();
-    g_testObj1.ObjRotate(0.01f, 0.02f, 0.03f);
-    g_testObj2.ObjRotate(-0.01f, -0.02f, -0.01f);
+    g_testObj.ObjUpdate();
+    g_testObj.ObjRotate(0.01f, 0.02f, 0.03f);
 }
 
 
-void D3D11Render()
+void D3D11Draw()
 {
     float color[4] = { 0.2f,0.2f,0.2f,1.0f };
     D3D11Graphics::GetInstance().getDevContextPtr()->ClearRenderTargetView(
@@ -115,8 +111,7 @@ void D3D11Render()
         1.0f, 
         0);
 
-    g_testObj1.ObjDraw();
-    g_testObj2.ObjDraw();
+    g_testObj.ObjDraw();
 
     // バックバッファを表示
     D3D11Graphics::GetInstance().getSwapChainPtr()->Present(1, 0);
@@ -125,6 +120,5 @@ void D3D11Render()
 
 void D3D11Uninit()
 {
-    g_testObj1.ObjUninit();
-    g_testObj2.ObjUninit();
+    g_testObj.ObjUninit();
 }

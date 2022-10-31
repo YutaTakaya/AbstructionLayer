@@ -1,3 +1,9 @@
+//==============================================================================
+// Filename: OpenGLGraphics.cpp
+// Description: OpenGL‚Ì•`‰æƒVƒXƒeƒ€
+// Copyright (C) Silicon Studio Co.,Ltd.All rightsreserved.
+//==============================================================================
+
 #include "OpenGLGraphics.h"
 #include "gl/gl.h"
 #include "gl/glu.h"
